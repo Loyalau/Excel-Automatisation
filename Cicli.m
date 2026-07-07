@@ -16,7 +16,7 @@ l = 1; %number of the current ligne
 c =  TPi{l,2}; %candidate for the candidate method
 a = 1; %for the append in D or else it will rewrite each ligne, needs to be different from i because of there is 2 ligne of append for each loop
 for i = 1:5
-    while c < TPi{l+1,2}
+    while c < 0.1 || c < TPi{l+1,2}
         l = l +1;
         c =  TPi{l,2};
     end
@@ -25,7 +25,7 @@ for i = 1:5
     D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
     D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
     a=a+1;
-    while c > TPi{l+1,2}
+    while c > 0.1 || c > TPi{l+1,2}
         l = l +1;
         c =  TPi{l,2};
     end
@@ -34,18 +34,63 @@ for i = 1:5
     D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
     D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
     a=a+1;
-    end
 
 end
 
-%for i = 1:5
+while c < 0 %to ensure that we are at the start of the next row of cycle in the table
+    l = l +1;
+    c =  TPi{l,2};
+end 
 
-%end
+for i = 1:5
+    while c < 0.1 || c < TPi{l+1,2}
+        l = l +1;
+        c =  TPi{l,2};
+    end
+    D{a,1} = sprintf("%d +", i);
+    D{a,2} = TPi{l,1}; %update the time column corresponding to the chosen cycle
+    D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
+    D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
+    a=a+1;
+    while c > 0.1 ||c > TPi{l+1,2}
+        l = l +1;
+        c =  TPi{l,2};
+    end
+    D{a,1} = sprintf("%d -", i);
+    D{a,2} = TPi{l,1}; %update the time column corresponding to the chosen cycle
+    D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
+    D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
+    a=a+1;
 
-%for i = 1:10
+end
 
-%end
+while c < 0
+    l = l +1;
+    c =  TPi{l,2};
+end 
+
+for i = 1:10
+    while c < 0.1 || c < TPi{l+1,2}
+        l = l +1;
+        c =  TPi{l,2};
+    end
+    D{a,1} = sprintf("%d +", i);
+    D{a,2} = TPi{l,1}; %update the time column corresponding to the chosen cycle
+    D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
+    D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
+    a=a+1;
+    while c > 0.1 || c > TPi{l+1,2}
+        l = l +1;
+        c =  TPi{l,2};
+    end
+    D{a,1} = sprintf("%d -", i);
+    D{a,2} = TPi{l,1}; %update the time column corresponding to the chosen cycle
+    D{a,3} = c;  %update the displacement column corresponding to the chosen cycle
+    D{a,4} = TPi{l,3};  %update the force column corresponding to the chosen cycle
+    a=a+1;
+
+end
 
 
 
-%end
+end
