@@ -1,5 +1,6 @@
 function [D] = Cicli(TPi)
 % The goal is to deduce from the previous table cleaned by Clean_Table the time, displacement and force of all max and min point of each cycle and to put it on a new table  
+% In this version it also create all the table 
 arguments (Input)
     TPi table
 end
@@ -117,7 +118,7 @@ for i = 1:10
     C = l; %The ending line of the semi cycle/The ending line of the cycle
     E2 = NRJ_Joule(D,TPi,B,C);
     D{a,5} = E1+E2;
-    
+
     a=a+1;
 
 end
