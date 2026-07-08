@@ -1,5 +1,5 @@
 function [Gp] = d_eff(Result_table_i,i,G)
-% This function will calculate the effective displacement of each cycle and put it in the Ciclo's table under the right column
+% This function will calculate the effective displacement of each cycle and put it in the Result_table under the right column
 arguments (Input)
     Result_table_i table
     i int32

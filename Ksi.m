@@ -1,6 +1,5 @@
 function [D] = Ksi(D,i)
-%K_EFF undefined
-%   undefined
+% This function will calculate the equivalent dumping of each cycle and put it in the Result_table under the right column
 arguments (Input)
     D table
     i int32

@@ -20,6 +20,6 @@
 % 
 %    Result_table{i}{:,7} = Result_table{i}{:,3} + d_eff(Result_table{i},i,G); % Determination of the column d_eff
 %    Result_table{i} = K_eff(Result_table{i},i); % Calculation of K_eff
-   Result_table{i} = Ksi(Result_table{i},i); % Calculation of Ksi
-
+%    Result_table{i} = Ksi(Result_table{i},i); % Calculation of Ksi
+    Result_table{i} = Delta(Result_table{i},i); % Calculation of DK_eff and DKsi
 end
