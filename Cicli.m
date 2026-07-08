@@ -8,7 +8,7 @@ end
 arguments (Output)
     D table
 end
-D = table(Size=[40 10], VariableTypes=["string" "double" "double" "double" "int32" "double" "double" "double" "double" "double"], VariableNames=["Cycle","Time [s]","Displacement [mm]","Force [kN]","NRJ [J]","d_eff [mm]","K_eff [kN/mm]","DK_eff [%]","Ksi_eff [%]","DKsi_eff [%]"]);
+D = table(Size=[40 11], VariableTypes=["string" "double" "double" "double" "int32" "double" "double" "double" "double" "double" "double"], VariableNames=["Cycle","Time [s]","Displacement [mm]","Force [kN]","NRJ [J]","NRJ_Cycle [J]","d_eff [mm]","K_eff [kN/mm]","DK_eff [%]","Ksi_eff [%]","DKsi_eff [%]"]);
 
 l = 1; % "l" represent the line in the table 
 
@@ -27,7 +27,8 @@ for i = 1:5
 
     B = l; % The ending line of the semi cycle/The starting line of the other semi cycle
     E1 = NRJ_Joule(D,TPi,A,B);
-    D{a,5} = 0 ; % Because we calculate the energy for each entire cycle hence we don't calculate the energy for this semi cycle (I tried to put an X but since this column only take int for value my X was converted to 88 which I assume is the ASCI value of "X")
+    D{a,5} = E1 ; 
+    D{a,6} = 0 ; % This column is the NRJ for the whole cycle we will calculate it at the end of the cycle (cycle as a loading and unloading)
 
     a=a+1;
     while c > 0.1 || c > TPi{l+1,2}
@@ -41,7 +42,8 @@ for i = 1:5
 
     C = l; %The ending line of the semi cycle/The ending line of the cycle
     E2 = NRJ_Joule(D,TPi,B,C);
-    D{a,5} = E1+E2;
+    D{a,5} = E2;
+    D{a,6} = E1+E2;
 
     a=a+1;
 
@@ -65,7 +67,8 @@ for i = 1:5
 
     B = l; % The ending line of the semi cycle/The starting line of the other semi cycle
     E1 = NRJ_Joule(D,TPi,A,B);
-    D{a,5} = 0 ; % Because we calculate the energy for each entire cycle hence we don't calculate the energy for this semi cycle (I tried to put an X but since this column only take int for value my X was converted to 88 which I assume is the ASCI value of "X")
+    D{a,5} = E1 ; 
+    D{a,6} = 0 ;
 
     a=a+1;
     while c > 0.1 ||c > TPi{l+1,2}
@@ -79,7 +82,8 @@ for i = 1:5
 
     C = l; %The ending line of the semi cycle/The ending line of the cycle
     E2 = NRJ_Joule(D,TPi,B,C);
-    D{a,5} = E1+E2;
+    D{a,5} = E2;
+    D{a,6} = E1+E2;
 
     a=a+1;
 
@@ -103,7 +107,8 @@ for i = 1:10
 
     B = l; % The ending line of the semi cycle/The starting line of the other semi cycle
     E1 = NRJ_Joule(D,TPi,A,B);
-    D{a,5} = 0 ; % Because we calculate the energy for each entire cycle hence we don't calculate the energy for this semi cycle (I tried to put an X but since this column only take int for value my X was converted to 88 which I assume is the ASCI value of "X")
+    D{a,5} = E1 ; 
+    D{a,6} = 0 ;
 
     a=a+1;
     while c > 0.1 || c > TPi{l+1,2}
@@ -117,8 +122,9 @@ for i = 1:10
 
     C = l; %The ending line of the semi cycle/The ending line of the cycle
     E2 = NRJ_Joule(D,TPi,B,C);
-    D{a,5} = E1+E2;
-
+    D{a,5} = E2;
+    D{a,6} = E1+E2;
+    
     a=a+1;
 
 end
