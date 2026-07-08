@@ -22,6 +22,11 @@ Nb_Cycle22 = [5]; % Here is the number of cycle for the Excel 22
 
         Result_table{i} = Cycle_format(TP{i},i,Nb_Cycle1_21,Nb_Sequence,Nb_SemiCycle);
 
+        Result_table{i} = d_eff(Result_table{i},i,G,Nb_SemiCycle); % Calculation of the column d_eff
+        Result_table{i} = K_eff(Result_table{i},i,Nb_SemiCycle); % Calculation of K_eff
+        Result_table{i} = Ksi(Result_table{i},i,Nb_SemiCycle); % Calculation of Ksi
+        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle1_21,Nb_Sequence,Nb_SemiCycle); % Calculation of DK_eff and DKsi
+
     else 
 
         [Table_Excel, Gioco] = Open_Excel("C:\Users\sonia\OneDrive\Bureau\Aurélien\Stage\Stage 2A Trento LPMS\Xcel\P22 NTC riel.xlsx",["RunningTime","Dislacement","Force_1"]);
@@ -32,12 +37,14 @@ Nb_Cycle22 = [5]; % Here is the number of cycle for the Excel 22
         Nb_Sequence = numel(Nb_Cycle22); % Number of Sequence of Cycle we have during one test (ex: for test 1 to 21 it's 3 because there is 5 5 10, for test 22 it's 1 because there is just the sequence of 5 cycle)
         Nb_SemiCycle = 2 * Nb_Cycle_tot;
 
-        Result_table{i} = Cycle_format(TP{i},i,Nb_Cycle22,Nb_Sequence,Nb_SemiCycle); %The last excel file has only 5 cycles (could make it on the same fonction with if i=!22 condition)
+        Result_table{i} = Cycle_format(TP{i},i,Nb_Cycle22,Nb_Sequence,Nb_SemiCycle); 
+
+        Result_table{i} = d_eff(Result_table{i},i,G,Nb_SemiCycle); % Calculation of the column d_eff
+        Result_table{i} = K_eff(Result_table{i},i,Nb_SemiCycle); % Calculation of K_eff
+        Result_table{i} = Ksi(Result_table{i},i,Nb_SemiCycle); % Calculation of Ksi
+        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle22,Nb_Sequence,Nb_SemiCycle); % Calculation of DK_eff and DKsi
 
     end
 
- Result_table{i} = d_eff(Result_table{i},i,G,Nb_SemiCycle); % Calculation of the column d_eff
- Result_table{i} = K_eff(Result_table{i},i,Nb_SemiCycle); % Calculation of K_eff
- Result_table{i} = Ksi(Result_table{i},i,Nb_SemiCycle); % Calculation of Ksi
- Result_table{i} = Delta(Result_table{i},i); % Calculation of DK_eff and DKsi
+
  end
