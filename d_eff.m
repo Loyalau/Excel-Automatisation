@@ -1,28 +1,24 @@
-function [Gp] = d_eff(Result_table_i,i,G)
+function [D] = d_eff(D,i,G,Nb_SemiCycle)
 % This function will calculate the effective displacement of each cycle and put it in the Result_table under the right column
 arguments (Input)
-    Result_table_i table
+    D table
     i int32
-    G table % Table of all the play/gioco
+    G table % Table of all the play/gioco created in Open_Excel
+    Nb_SemiCycle double
 end
 
 arguments (Output)
-    Gp double % Effective displacement calculated for each cycle
+    D table
 end
 
-gi = G{i,1};
-if i ~= 22
-    Gp = ones(40,1);
-    for k = 1 : 2 : 39
-            Gp(k) = -gi;
-            Gp(k+1) = +gi;
+gi = G{i,1}; % The play corresponding to the test number i
+M = ones(Nb_SemiCycle,1); % The goal is to create a matrix/Vector constituted of -gi +gi because d_eff = d +/- gioco
+
+    for k = 1 : 2 : Nb_SemiCycle - 1
+            M(k) = -gi;
+            M(k+1) = +gi;
     end
-else
-    Gp = ones(10,1);
-    for k = 1 : 2 : 9
-        Gp(k) = -gi;
-        Gp(k+1) = +gi;
-    end
-end
-            
+
+D{:,7} = D{:,3} + M;   
+
 end

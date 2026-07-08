@@ -3,15 +3,20 @@ function [D] = Delta(D,i)
 arguments (Input)
     D table
     i int32
+  
 end
 
 arguments (Output)
     D table
 end
 
-if i ~= 22
+% In this function we are going to calculate Dk_eff = (K_effi -K_eff_ref)/K_eff_ref 
+% The problem is that K_eff_ref is different if you are on a positive (traction) or negative (compression) semi cycle and it is different for each sequence of cycle
+% Therefore here is the solution that I found, I could use Nb_Cycle_tot/Nb_Sequence and Nb_SemiCycle in the same way as Cycle_format but it will look over complicated 
+
+if i ~= 22 % First of all we check if we are on the last file 
     for k = 1 : 10
-        if mod(k,2) ~= 0 % We verify if we are on a + (odd line) or - (even line) semi cycle
+        if mod(k,2) ~= 0 % We verify if we are on a + (odd line) or - (even line) semi cycle, because we use different referential for positive and negative semi cycle
             D{k,9} = 100*(D{k,8} - D{5,8})/D{5,8} ;
             D{k,11} = 100*(D{k,10} - D{5,10})/D{5,10};
         else
