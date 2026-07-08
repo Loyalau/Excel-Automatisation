@@ -15,6 +15,8 @@ E = 0;
 absD = 0; % Absolute value of the difference between two successive displacement value of the Tpi's table
 absMoyF = 0; % Absolute value of the mean between two successive force value of the Tpi's table
 
+
+
 for i = A : B
     if i > 1 
         absD = abs(TPi{i,2}-TPi{i-1,2}) ;

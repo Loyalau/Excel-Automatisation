@@ -14,6 +14,7 @@ l = 1;
 c =  TPi{l,2}; 
 a = 1; 
 for i = 1:5
+    
     A = l; % The starting line of the semi cycle/The starting line of the cycle
     while c < 0.1 || c < TPi{l+1,2}
         l = l +1;

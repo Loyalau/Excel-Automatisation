@@ -49,12 +49,13 @@ for i = 1:5
 
 end
 
-while c < 0 % To ensure that we are at the start of the next sequence of cycle in the table
-    l = l +1;
-    c =  TPi{l,2};
-end 
+% while c < 0 % To ensure that we are at the start of the next sequence of cycle in the table
+%     l = l +1;
+%     c =  TPi{l,2};
+% end 
 
 for i = 1:5
+    
     A = l; % The starting line of the semi cycle/The starting line of the cycle
     while c < 0.1 || c < TPi{l+1,2}
         l = l +1;
@@ -89,12 +90,13 @@ for i = 1:5
 
 end
 
-while c < 0
-    l = l +1;
-    c =  TPi{l,2};
-end 
+% while c < 0
+%     l = l +1;
+%     c =  TPi{l,2};
+% end 
 
 for i = 1:10
+    
     A = l; % The starting line of the semi cycle/The starting line of the cycle
     while c < 0.1 || c < TPi{l+1,2}
         l = l +1;
@@ -124,7 +126,7 @@ for i = 1:10
     E2 = NRJ_Joule(D,TPi,B,C);
     D{a,5} = E2;
     D{a,6} = E1+E2;
-    
+
     a=a+1;
 
 end
