@@ -9,17 +9,8 @@ arguments (Output)
     T table
 end
 
-% Too much calculation time :
-
-% c_disp = 2;
-% c_force = 3;
-% l = 1;
- 
-% while Table_Excel{l,c_disp}<0.1 || Table_Excel{l,c_force}<0 % We consider the offset of the file the time where the displacement is reaching 0.1mm, we also need to ensure that the forces are positive
-%     l=l+1;
-% end
-
-% Take less time to work with array instead of table : 
+% Take less time to work with array instead of directly looking into the table Table_Excel :
+% That's why we transform the column of the table into array in each function
 
 c_disp = Table_Excel{:,2};
 c_force = Table_Excel{:,3};
