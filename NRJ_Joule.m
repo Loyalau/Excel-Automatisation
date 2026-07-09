@@ -1,7 +1,6 @@
-function [E] = NRJ_Joule(Result_table_i,TPi,A,B)
+function [E] = NRJ_Joule(TPi,A,B)
 % This function will calculate the Energy of each cycle and put it in the Ciclo's table under the right column
 arguments (Input)
-    Result_table_i table
     TPi table
     A int32 % Starting line of the semi cycle in the TPi table
     B int32 % Ending of the semi cycle in the TPi table
