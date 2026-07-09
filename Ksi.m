@@ -3,8 +3,8 @@ function [D] = Ksi(D,i,Nb_SemiCycle)
 arguments (Input)
     D table
     i int32
-    Nb_SemiCycle int32
-end
+    Nb_SemiCycle double
+end 
 
 arguments (Output)
     D table

@@ -25,7 +25,7 @@ Nb_Cycle22 = [5]; % Here is the number of cycle for the Excel 22
         Result_table{i} = d_eff(Result_table{i},i,G,Nb_SemiCycle); % Calculation of the column d_eff
         Result_table{i} = K_eff(Result_table{i},i,Nb_SemiCycle); % Calculation of K_eff
         Result_table{i} = Ksi(Result_table{i},i,Nb_SemiCycle); % Calculation of Ksi
-        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle1_21,Nb_Sequence,Nb_SemiCycle); % Calculation of DK_eff and DKsi
+        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle1_21,Nb_Sequence); % Calculation of DK_eff and DKsi
 
     else 
 
@@ -42,7 +42,7 @@ Nb_Cycle22 = [5]; % Here is the number of cycle for the Excel 22
         Result_table{i} = d_eff(Result_table{i},i,G,Nb_SemiCycle); % Calculation of the column d_eff
         Result_table{i} = K_eff(Result_table{i},i,Nb_SemiCycle); % Calculation of K_eff
         Result_table{i} = Ksi(Result_table{i},i,Nb_SemiCycle); % Calculation of Ksi
-        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle22,Nb_Sequence,Nb_SemiCycle); % Calculation of DK_eff and DKsi
+        Result_table{i} = DeltaK(Result_table{i},i,Nb_Cycle22,Nb_Sequence); % Calculation of DK_eff and DKsi
 
     end
 

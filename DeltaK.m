@@ -1,11 +1,10 @@
-function [D] = DeltaK(D,i,Nb_Cycle,Nb_Sequence,Nb_SemiCycle)
+function [D] = DeltaK(D,i,Nb_Cycle,Nb_Sequence)
 % This function will calculate DK_eff and DKsi of each cycle and put it in the Result_table under the right column
 arguments (Input)
     D table
     i int32
     Nb_Cycle double
     Nb_Sequence int32
-    Nb_SemiCycle int32
   
 end
 
