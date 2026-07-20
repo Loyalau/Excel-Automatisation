@@ -10,6 +10,6 @@ arguments (Output)
 end
 
 D{:,8} = D{:,4} ./ D{:,7};
-D{:,8} = round(D{:,8},2);
+D(:, 8) = table(round(D{:, 8}, 1));
 end
 

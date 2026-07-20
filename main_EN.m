@@ -1,15 +1,15 @@
-% Initialization of the variable :
-Number_test_EN = input('Enter the number of test realized in the EN 15129 procedure  : '); % Number of test realized in the EN 15129 procedure
-
-G_EN = table(Size=[Number_test_EN 1], VariableTypes="double", VariableNames="Play_[mm]"); % Table that will receive later all the play (Gioco in italian) of all the test
-for i = 1 : Number_test_EN
-    G_EN{i, 1} = input(sprintf('Enter the measured Play for the test number %d : ', i));
-end 
-Nb_Cycle_EN = [10]; % Here is the number of cycle for the EN 15129 procedure (the first 2 sequences of 5 cycles aren't used for the following calculation
-
-Result_struct = struct(); % This is the end goal of this program, a structure with a table for each test with all the result (data and calculation)
-Result_table = cell(1,Number_test_EN); % This is the sub-table corresponding of each test that will be put in the structure at the end
-Nb_SemiCycle = 2* Nb_Cycle_EN;
+% % Initialization of the variable :
+% Number_test_EN = input('Enter the number of test realized in the EN 15129 procedure  : '); % Number of test realized in the EN 15129 procedure
+% 
+% G_EN = table(Size=[Number_test_EN 1], VariableTypes="double", VariableNames="Play_[mm]"); % Table that will receive later all the play (Gioco in italian) of all the test
+% for i = 1 : Number_test_EN
+%     G_EN{i, 1} = input(sprintf('Enter the measured Play for the test number %d : ', i));
+% end 
+% Nb_Cycle_EN = [10]; % Here is the number of cycle for the EN 15129 procedure (the first 2 sequences of 5 cycles aren't used for the following calculation
+% 
+% Result_struct = struct(); % This is the end goal of this program, a structure with a table for each test with all the result (data and calculation)
+% Result_table = cell(1,Number_test_EN); % This is the sub-table corresponding of each test that will be put in the structure at the end
+% Nb_SemiCycle = 2* Nb_Cycle_EN;
 
 % Main program :
 
