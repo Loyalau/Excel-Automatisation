@@ -81,7 +81,9 @@ for k = 1 : Nb_Cycle
     a=a+1;
 
 end
-
+Time_col = round(Time_col,1);
+Disp_col = round (Disp_col,1);
+Force_col = round (Force_col,1);
 
 % Creation and filling of the Table that this function will have to output 
 % (remark : VariableNames could have been declared on the Main and put as input for this function)
