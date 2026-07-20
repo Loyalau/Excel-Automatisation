@@ -10,7 +10,7 @@ end
 arguments (Output)
     D table
 end
-for k = 1 : 20
+for k = 1 : 10
     if mod(k,2) ~= 0 % We verify if we are on a + (odd line) or - (even line) semi cycle
                 D{k,9} = 100*(D{k,8} - D{5,8})/D{5,8} ;
                 D{k,11} = 100*(D{k,10} - D{5,10})/D{5,10};
