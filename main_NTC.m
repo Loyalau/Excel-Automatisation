@@ -7,6 +7,7 @@ for i = 1 : Number_test_NTC
 end 
 Nb_Cycle_NTC = [5]; % Here is the number of cycle for the NTC18 procedure
 
+Data_Table = cell(1, Number_test_NTC); % Table on which we will place the data from the txt
 Result_struct = struct(); % This is the end goal of this program, a structure with a table for each test with all the result (data and calculation)
 Result_table = cell(1,Number_test_NTC); % This is the sub-table corresponding of each test that will be put in the structure at the end
 Nb_SemiCycle = 2* Nb_Cycle_NTC;
@@ -23,7 +24,7 @@ NTC_sub_folder = content_folder([content_folder.isdir] & contains({content_folde
 
 for i = 1 : Number_test_NTC
 
-    TestName=strrep(NTC_sub_folder(i).name,'-','_'); % transform '-' into '_'
+    TestName = strrep(NTC_sub_folder(i).name,'-','_'); % transform '-' into '_'
     TestName = strrep(TestName, ' ', '_'); % transform ' ' into '_'
 
     File = [main_folder '\' NTC_sub_folder(i).name '\' 'DAQ- Running Time, … - (Timed).txt']; % Data file in txt (can be '\DAQ-Tempo; … - (Temporizzato)_new.txt' in your case I don't know)
@@ -46,9 +47,10 @@ for i = 1 : Number_test_NTC
 
 
 % creation/filling of the result table
-    Data_Table = array2table(Result_struct.(TestName)(1).Data); % Result_struct.(TestName)(1).Data is an array right now so to call the function clean table we need it to be a table
+    Data_Table{i} = array2table(Result_struct.(TestName)(1).Data); % Result_struct.(TestName)(1).Data is an array right now so to call the function clean table we need it to be a table
 
-    Result_struct.(TestName)(1).Data = Clean_Table_NTC(Data_Table); % Clean the data from the first value 
+    Result_struct.(TestName)(1).Data = Clean_Table_NTC(Data_Table{i}); % Clean the data from the first value 
+    
     Result_table{i} = Cycle_format( Result_struct.(TestName)(1).Data,Nb_Cycle_NTC,ref_NTC); % Filling of the first 6 column (Semi Cycle, Running time, Displacement, Force, Energy of each semi cycle and Energy of a Cycle)
     Result_table{i} = d_eff(Result_table{i},G_NTC{i, 1},Nb_SemiCycle); % Calculation of the column d_eff
     Result_table{i} = K_eff(Result_table{i}); % Calculation of K_eff
@@ -59,7 +61,7 @@ for i = 1 : Number_test_NTC
      
 end
 
-clear Data_Table main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i ref_NTC
+clear main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i ref_NTC
 
 %% Plot of the graphs : 
 
@@ -68,28 +70,68 @@ clear Data_Table main_folder new_filename NTC_sub_folder Result_table File conte
 % F = lunghezza della finestra (deve essere un numero DISPARI)
 
 N = 3; 
-F = 11; % Una finestra stretta per non spalmare i picchi di 2-3 campioni
-Force = str2double(Result_struct.(TestName)(1).Results(:,4));
-ForceFilt = sgolayfilt(Force, N, F);
+F = 5; % Una finestra stretta per non spalmare i picchi di 2-3 campioni
 
-Disp = str2double(Result_struct.(TestName)(1).Results(:,3));
+for i = 1 : Number_test_NTC
+    
+    Force = table2array(Data_Table{i}(:,4))*0.001;
+    Disp = table2array(Data_Table{i}(:,3));
+    Time = table2array(Data_Table{i}(:,2));
+    % apply a filter on the Force to get rid of measurement noise
+    ForceFilt = sgolayfilt(Force, N, F);
+    
+    % First figure X axis : Time Y axis Displacement and Force
+    figure
+    p1 = plot(Time,Disp,Time,ForceFilt);
+    hold on;
+    grid on;
+    % ax.Box = 'off'; % In case you need to get rid of the outer box 
+    
+    % Limits of the grid
+    xlim([0 round(max(Time))*1.1]);
+    ylim([-300 300]);
+    
+    % Label, Legend and title
+    xl1 = xlabel('Tempo [s]');
+    yl1 = ylabel('Spostamento [mm] Carico [kN]');
+    title(sprintf('Storia di spostamento e carico applicata prove n°%d', i ));
+    legend({'Spostamento','Carico'},'Location','southwest');
+    legend('boxoff');
 
-figure
-p = plot(Disp,Force);
-hold on
+    % Positioning of the x label
+    xl1.Position = [225, -25];            
+    
+    hold off
 
-datatip(p, Disp_ForceMax, ForceMax, 'location', 'northwest');
-datatip(p, Disp_Force4, Force4, 'location', 'northwest');
-datatip(p, Disp_Force1, Force1, 'location', 'northwest');
+    % Second figure (hysteresis) X axis : Displacement Y axis Force
+    figure
+    p2 = plot(Disp,ForceFilt);
+    hold on;
+    grid on;
+    
+    % Position the Y axis in the grid at the origin
+    ax = gca;
+    ax.XAxisLocation = 'origin';
+    ax.YAxisLocation = 'origin';
+    % ax.Box = 'off';
+    
+    % Limits of the grid
+    xlim([-ceil(max(Disp)/10)*10 ceil(max(Disp)/10)*10])
+    ylim([-round(max(Force)*1.2) round(max(Force)*1.2)])
+    
+    % Label, and title
+    xl2 = xlabel('Spostamento [mm]');
+    yl2 = ylabel('Carico [kN]');
+    title(sprintf('Diagramma isteretico prove n°%d', i));
+    
+    % Positioning of the x and y label + rotation of the y label so that it can be read vertically
+    xl2.Position = [50, -50];           
+    yl2.Position = [-15, 250];
+    yl2.Rotation = 90;
 
-xlabel('Act. displ [mm]')
-ylabel('Act. force [kN]')
-title(Title)
-grid on
-xlim([0 ceil(max(Disp)/10)*10])
-ylim([0 round(max(Force)*1.2)])
-hold off
+    hold off
+end
 
-clear Disp Force
+clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 
-saveas(gcf, [PlotsFolder '\' Title '.png'])
+% saveas(gcf, [PlotsFolder '\' Title '.png'])
