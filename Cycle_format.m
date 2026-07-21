@@ -66,6 +66,13 @@ end
 % Therefore to find the start and end of each cycle we search for the 0 in the displacement and to do so we look when to consecutive value of  measured displacement (Vector_disp(1:end-1) and Vector_disp(2:end)) have different sign (one is before 0 and the other after), by comparing their  product and 0
 zero_idx = find(Vector_disp(1:end-1) .* Vector_disp(2:end) <= 0);
 a = 1 ;
+
+% We needs to make sur that the first energy calculation is done at the start of the data sample even if it's not a zero
+if zero_idx(1) ~= 1
+    zero_idx = [1; zero_idx];
+end
+
+
 for n = 1 : 2 : length (zero_idx) % We fill in the negative cycle (global min previously found)
     if n + 3 <= length (zero_idx)
         A = zero_idx(n); % The starting line of the semi cycle (to begin the calculation of the Energy used during said semi cycle)
