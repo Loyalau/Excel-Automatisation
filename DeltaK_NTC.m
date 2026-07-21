@@ -18,6 +18,6 @@ for k = 1 : 10
                 D{k,9} = 100*(D{k,8} - D{6,8})/D{6,8} ;
                 D{k,11} = 100*(D{k,10} - D{6,10})/D{6,10};
     end
-D(:, 9) = table(round(D{:, 9}, 1));
-D(:, 11) = table(round(D{:, 11}, 1));
+D(:, 9) = table(round(D{:, 9}, 2));
+D(:, 11) = table(round(D{:, 11}, 2));
 end

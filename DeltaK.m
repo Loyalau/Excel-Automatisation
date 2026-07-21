@@ -19,6 +19,6 @@ for k = 1 : 20
                 D{k,11} = 100*(D{k,10} - D{6,10})/D{6,10};
     end
 end
-D(:, 9) = table(round(D{:, 9}, 2));
-D(:, 11) = table(round(D{:, 11}, 2));
+D(:, 9) = table(round(D{:, 9}, 2)); % I need to round to 2 decimal for D_Keff or else it as a lot of 0 (and not 0.x)
+D(:, 11) = table(round(D{:, 11}, 2)); 
 end
