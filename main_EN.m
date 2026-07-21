@@ -59,6 +59,6 @@ for i = 1 : Number_test_EN
     Result_struct.(TestName)(1).Results =  Result_table{i}; % put the table of all result in the "Results" element of the structure
 end
 
-clear Data_Table main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i
+clear Data_Table main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN
 
 %% Plot of the graphs : 

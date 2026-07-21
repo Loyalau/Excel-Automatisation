@@ -59,6 +59,37 @@ for i = 1 : Number_test_NTC
      
 end
 
-clear Data_Table main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i
+clear Data_Table main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i ref_NTC
 
 %% Plot of the graphs : 
+
+% Parametri del filtro:
+% N = ordine del polinomio (più è alto, più protegge i picchi)
+% F = lunghezza della finestra (deve essere un numero DISPARI)
+
+N = 3; 
+F = 11; % Una finestra stretta per non spalmare i picchi di 2-3 campioni
+Force = str2double(Result_struct.(TestName)(1).Results(:,4));
+ForceFilt = sgolayfilt(Force, N, F);
+
+Disp = str2double(Result_struct.(TestName)(1).Results(:,3));
+
+figure
+p = plot(Disp,Force);
+hold on
+
+datatip(p, Disp_ForceMax, ForceMax, 'location', 'northwest');
+datatip(p, Disp_Force4, Force4, 'location', 'northwest');
+datatip(p, Disp_Force1, Force1, 'location', 'northwest');
+
+xlabel('Act. displ [mm]')
+ylabel('Act. force [kN]')
+title(Title)
+grid on
+xlim([0 ceil(max(Disp)/10)*10])
+ylim([0 round(max(Force)*1.2)])
+hold off
+
+clear Disp Force
+
+saveas(gcf, [PlotsFolder '\' Title '.png'])
