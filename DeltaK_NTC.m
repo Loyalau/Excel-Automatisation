@@ -1,5 +1,5 @@
 % This function will calculate DK_eff and DKsi of each cycle and put it in the Result_table under the right column
-function [D] = DeltaK(D,Nb_Cycle)
+function [D] = DeltaK_NTC(D,Nb_Cycle)
 
 arguments (Input)
     D table

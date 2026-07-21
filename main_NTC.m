@@ -51,4 +51,7 @@ for i = 1 : Number_test_NTC
     Result_table{i} = DeltaK_NTC(Result_table{i},Nb_Cycle_NTC); % Calculation of DK_eff and DKsi
 
     Result_struct.(TestName)(1).Results =  Result_table{i}; % put the table of all result in the "Results" element of the structure
+     
 end
+
+clear Data_Table main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i

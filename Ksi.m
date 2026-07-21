@@ -17,5 +17,5 @@ for k = 1 : Nb_SemiCycle
         D{k,10} = 100*( double(D{k+1,6}) / (2*pi*D{k,4}*D{k,7}) );
     end      
 end
-D(:, 10) = table(round(D{:, 10}, 1));
+D(:, 10) = table(round(D{:, 10}, 2));
 end

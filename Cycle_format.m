@@ -82,7 +82,7 @@ for k = 1 : Nb_Cycle
 
 end
 Time_col = round(Time_col,1);
-Disp_col = round (Disp_col,1);
+Disp_col = round (Disp_col,2);
 Force_col = round (Force_col,1);
 
 % Creation and filling of the Table that this function will have to output 

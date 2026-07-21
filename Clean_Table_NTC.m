@@ -1,5 +1,5 @@
 % This function aim to clean the table created by Open_Excel, to do so we wants to delete all the row before the offset zero of the test.
-function [T] = Clean_Table(Table_input)
+function [T] = Clean_Table_NTC(Table_input)
 
 arguments (Input)
     Table_input table
