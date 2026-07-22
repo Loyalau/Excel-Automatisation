@@ -15,7 +15,8 @@ nums = zeros(size(Test_names));
 
 
 for k = 1 : numel(Test_names) % for each elements (name) in Test_names
-    nums(k) = sscanf(Test_names{k}, TestName(k,1));   % Take the number of the test (the format of the names are EN_n°test_22
+    num_test = regexp(Test_names{k}, '\d+', 'match'); % Take from the char variable the number (encoded \d) it encounter in the name
+    nums(k) = str2double(num_test{1});   % Take the number of the test (the format of the names are EN_n°test_22) (we have to transform it into double)
 end
 [~, order] = sort(nums); % Create a table with the id sorted of the structure (the value aren't necessary so they are ignored by '~'
 

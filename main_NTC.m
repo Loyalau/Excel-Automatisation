@@ -185,7 +185,7 @@ for i = 1 :  numel(Sorted_Names)
     % append(doc, PageBreak()); % New page on the doc
 
     % 3) We put the table of the result under the graph on a new page ? 
-    Table_doc = Result_struct.(TestName)(1).Results{i};
+    Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
     Table_doc.Style = {Width('15cm'),Height('10cm'),HAlign('center')};
     Table_doc.Border = 'single';
     Table_doc.BorderWidth = '1pt';
