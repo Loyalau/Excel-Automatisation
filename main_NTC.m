@@ -156,9 +156,7 @@ for i = 1 :  numel(Sorted_Names)
     append(doc,Sub_title); % "fwrite"
 
     % 2) We put the 2 graph below the subtitle 
-    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']);
-    % img1.Width = '10cm';   
-    % img1.Height = '5cm';  
+    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']); 
     img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
     append(doc, img1);
 
@@ -167,8 +165,6 @@ for i = 1 :  numel(Sorted_Names)
     append(doc,legend1);
 
     img2 = Image([PlotsFolder '\' Title_graph2{i} '.png']);
-    % img2.Width = '10cm';   
-    % img2.Height = '5cm';
     img2.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
     append(doc, img2); 
 
@@ -180,60 +176,16 @@ for i = 1 :  numel(Sorted_Names)
 
     % 3) We put the table of the result under the graph on a new page ? 
 
-    % % Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
-    % % Table_doc.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
-    % % 
-    % % Table_doc.Border = 'single';
-    % % Table_doc.BorderWidth = '1pt';
-    % 
-    % Result_struct.(TestName{i})(1).Results = Round_Table(Result_struct.(TestName{i})(1).Results);
-    % 
-    % tableStyle ={Width("100%"),Border("solid"),RowSep("solid"),ColSep("solid")};
-    % tableEntriesStyle = {HAlign("center"),VAlign("middle"),FontSize("8.5pt")};
-    % headerRowStyle ={InnerMargin("2pt","2pt","2pt","2pt"),Bold(true)};
-    % 
-    % % headerContent =Result_struct.(TestName{i})(1).Results(1, :);
-    % % bodyContent =Result_struct.(TestName{i})(1).Results(2:end, :);
-    % 
-    % specs(1) = TableColSpec;
-    % specs(1).Span = 1;
-    % specs(1).Style = {Width("12%")};
-    % 
-    % specs(2) = TableColSpec;
-    % specs(2).Span = 10;
-    % specs(2).Style = {Width("8.8%")};
-    % 
-    % grps(1).ColSpecs = specs;
-    % 
-    % Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
-    % Name_table.HAlign = 'center';
-    % append(doc,Name_table);
-    % 
-    % formalTable = FormalTable(Result_struct.(TestName{i})(1).Results);
-    % % grps = TableColSpecGroup;
-    % % grps.ColSpecs = specs;
-    % 
-    % % formalTable.ColSpecGroups = grps;
-    % 
-    % formalTable.Style = tableStyle;
-    % formalTable.TableEntriesStyle = tableEntriesStyle;
-    % 
-    % headerRow = formalTable.Header.Children;
-    % headerRow.Style = headerRowStyle; 
-    % 
-    % append(doc,formalTable);
-    % 3) Tableau de résultats
+    % The firs problem is that the table from
+    % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table
+    cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
 
-    % A. Formater le tableau avec Round_Table
-    rawTable = Result_struct.(TestName{i})(1).Results;
-    cleanTable = Round_Table(rawTable);
-
-    % B. Titre
+    % Title of the table in the doc
     Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
     Name_table.HAlign = 'center';
     append(doc, Name_table);
 
-    % C. Configuration des largeurs de colonnes (ColSpecGroup)
+    % width of the column (first one is slightly wider than the other one)
     specs(1) = TableColSpec;
     specs(1).Span = 1;
     specs(1).Style = {Width("12%")};
@@ -245,11 +197,24 @@ for i = 1 :  numel(Sorted_Names)
     grps = TableColSpecGroup;
     grps.ColSpecs = specs;
 
-    % D. Instanciation de la FormalTable avec le tableau nettoyé
+    % Writing of the table with the previous dimension
     formalTable = FormalTable(cleanTable);
     formalTable.ColSpecGroups = grps;
 
-    % E. Application des styles
+    % % Fusion of the cellule/line of the table from + and - cycle
+    % bodyRows = formalTable.Body.Children; % bodyRows has now all the line of the table
+    % numRows = numel(bodyRows);
+    % 
+    % bodyRows = formalTable.Body.Children;
+    % for r = 1:2:numel(bodyRows)
+    %     cellPlus.RowSpan = 2;
+    % 
+    %     nextRow = bodyRows(r+1);
+    %     cellMinus = nextRow.Children(1);
+    %     removeEntry(nextRow, cellMinus); % remove the next cell
+    % end
+    % 
+    % Style of the table/headrow...
     tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
     tableEntriesStyle = {HAlign("center"), VAlign("middle"), FontSize("8.5pt")};
     headerRowStyle = {InnerMargin("2pt","2pt","2pt","2pt"), Bold(true)};
