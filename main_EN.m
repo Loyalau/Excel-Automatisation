@@ -149,7 +149,7 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 import mlreportgen.dom.*
 
 Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
-Sorted_Names = Sort_struct(Result_struct);
+Sorted_Names = Sort_struct(Result_struct,'EN');
 %Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
 
 doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Certificato needed for a Word file
@@ -190,7 +190,11 @@ for i = 1 :  numel(Sorted_Names)
     
     % 3) We put the table of the result under the graph on a new page ? 
     Table_doc = Result_struct.(TestName)(1).Results{i};
-    
+    Table_doc.Style = {Width('15cm'),Height('10cm'),HAlign('center')};
+    Table_doc.Border = 'single';
+    Table_doc.BorderWidth = '1pt';
+    append(doc, Table_doc);
+
 end
 
 close(doc); % "fclose"
