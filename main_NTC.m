@@ -182,14 +182,40 @@ for i = 1 :  numel(Sorted_Names)
     legend2.HAlign = 'center';
     append(doc,legend2);
 
-    % append(doc, PageBreak()); % New page on the doc
+    append(doc, PageBreak()); % New page on the doc
 
     % 3) We put the table of the result under the graph on a new page ? 
-    Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
-    Table_doc.Style = {Width('15cm'),Height('10cm'),HAlign('center')};
-    Table_doc.Border = 'single';
-    Table_doc.BorderWidth = '1pt';
-    append(doc, Table_doc);
+
+    % Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
+    % Table_doc.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+    % 
+    % Table_doc.Border = 'single';
+    % Table_doc.BorderWidth = '1pt';
+
+    tableStyle ={Width("100%"),Border("solid"),RowSep("solid"),ColSep("solid")};
+    tableEntriesStyle = {HAlign("center"),VAlign("middle")};
+    headerRowStyle ={InnerMargin("2pt","2pt","2pt","2pt"),Bold(true)};
+    
+    % headerContent =Result_struct.(TestName{i})(1).Results(1, :);
+    % bodyContent =Result_struct.(TestName{i})(1).Results(2:end, :);
+
+    grps(1) = TableColSpecGroup;
+    grps(1).Span = 11;
+    grps(1).Style = {Width("9.09%")};
+    % grps(1).ColSpecs = specs;
+
+    append(doc,Heading1("Tabella riassuntiva dei risultati della prova."));
+
+    formalTable = FormalTable(Result_struct.(TestName{i})(1).Results);
+    formalTable.ColSpecGroups = grps;
+
+    formalTable.Style = tableStyle;
+    formalTable.TableEntriesStyle = tableEntriesStyle;
+
+    headerRow = formalTable.Header.Children;
+    headerRow.Style = headerRowStyle; 
+
+    append(doc,formalTable);
 
 end
 
