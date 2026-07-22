@@ -94,7 +94,8 @@ for i = 1 : Number_test_NTC
     % Label, Legend and title
     xl1 = xlabel('Tempo [s]');
     yl1 = ylabel('Spostamento [mm] Carico [kN]');
-    title(sprintf('Storia di spostamento e carico applicata prove n°%d', i ));
+    Title_graph = sprintf('Storia di spostamento e carico applicata prove n°%d', i );
+    title(Title_graph);
     legend({'Spostamento','Carico'},'Location','southwest');
     legend('boxoff');
 
@@ -102,6 +103,7 @@ for i = 1 : Number_test_NTC
     xl1.Position = [225, -25];            
     
     hold off
+    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
 
     % Second figure (hysteresis) X axis : Displacement Y axis Force
     figure
@@ -122,13 +124,15 @@ for i = 1 : Number_test_NTC
     % Label, and title
     xl2 = xlabel('Spostamento [mm]');
     yl2 = ylabel('Carico [kN]');
-    title(sprintf('Diagramma isteretico prove n°%d', i));
+    Title_graph = sprintf('Diagramma isteretico prove n°%d', i);
+    title(Title_graph);
     
     % Positioning of the x and y label + rotation of the y label so that it can be read vertically
     xl2.Position = [50, -50];           
     yl2.Position = [-15, 250];
     yl2.Rotation = 90;
 
+    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
     hold off
 end
 

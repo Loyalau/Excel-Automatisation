@@ -64,6 +64,7 @@ end
 clear main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN TestName
 
 %% Plot of the graphs : 
+PlotsFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Plot';
 
 % Parametri del filtro:
 % N = ordine del polinomio (più è alto, più protegge i picchi)
@@ -94,7 +95,8 @@ for i = 1 : Number_test_EN
     % Label, Legend and title
     xl1 = xlabel('Tempo [s]');
     yl1 = ylabel('Spostamento [mm] Carico [kN]');
-    title(sprintf('Storia di spostamento e carico applicata prove n°%d', i ));
+    Title_graph = sprintf('Storia di spostamento e carico applicata prove n°%d', i );
+    title(Title_graph);
     legend({'Spostamento','Carico'},'Location','southwest');
     legend('boxoff');
 
@@ -102,6 +104,7 @@ for i = 1 : Number_test_EN
     xl1.Position = [475, -25];            
     
     hold off
+    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
 
     % Second figure (hysteresis) X axis : Displacement Y axis Force
     figure
@@ -122,7 +125,8 @@ for i = 1 : Number_test_EN
     % Label, and title
     xl2 = xlabel('Spostamento [mm]');
     yl2 = ylabel('Carico [kN]');
-    title(sprintf('Diagramma isteretico prove n°%d', i));
+    Title_graph = sprintf('Diagramma isteretico prove n°%d', i);
+    title(Title_graph);
     
     % Positioning of the x and y label + rotation of the y label so that it can be read vertically
     xl2.Position = [65, -50];           
@@ -130,11 +134,10 @@ for i = 1 : Number_test_EN
     yl2.Rotation = 90;
 
     hold off
+    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
 end
 
 clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
-
-% saveas(gcf, [PlotsFolder '\' Title '.png'])
 
 %% Writing in the doc 
 import mlreportgen.dom.*
@@ -154,10 +157,11 @@ for i = 1 :  numel(Sorted_Names)
     Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
     
     append(doc,Sub_title); % "fwrite"
-    fwrite(fid, Sub_title{i}); % write the corrected info of the old file into the new one
+    %fwrite(fid, Sub_title{i}); % write the corrected info of the old file into the new one
 end
 
 close(doc); % "fclose"
+clear ans Certificato_Name i k Sorted_Name Sub_title title      
 
 
 
