@@ -94,9 +94,9 @@ end
 
 % To round a number we need to transform it into char because round a double mean that you round to the superior number BUT it will keep the same amount of number after the ',' as '0' so it is not good to look at 
 % Hence the solution that is kept here is 
-Time_col = table(round(Time_col, 1));
-Disp_col = table(round(Disp_col, 2)); % If I round to 1 decimal after the ',' d_eff is calculated as 0 
-Force_col = table(round(Force_col, 1));
+Time_col = round(Time_col, 1);
+Disp_col = round(Disp_col, 2); % If I round to 1 decimal after the ',' d_eff is calculated as 0 
+Force_col = round(Force_col, 1);
 
 % Creation and filling of the Table that this function will have to output 
 % (remark : VariableNames could have been declared on the Main and put as input for this function)

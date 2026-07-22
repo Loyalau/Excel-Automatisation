@@ -69,23 +69,17 @@ PlotsFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Tr
 Title_graph1 = cell(1, Number_test_NTC);
 Title_graph2 = cell(1, Number_test_NTC);
 % Parametri del filtro:
-% N = ordine del polinomio (più è alto, più protegge i picchi)
-% F = lunghezza della finestra (deve essere un numero DISPARI)
-
-N = 3; 
-F = 5; % Una finestra stretta per non spalmare i picchi di 2-3 campioni
-
 for i = 1 : Number_test_NTC
     
     Force = table2array(Data_Table{i}(:,4))*0.001;
     Disp = table2array(Data_Table{i}(:,3));
     Time = table2array(Data_Table{i}(:,2));
     % apply a filter on the Force to get rid of measurement noise
-    ForceFilt = sgolayfilt(Force, N, F);
+    
     
     % First figure X axis : Time Y axis Displacement and Force
     figure
-    p1 = plot(Time,Disp,Time,ForceFilt);
+    p1 = plot(Time,Disp,Time,Force);
     hold on;
     grid on;
     % ax.Box = 'off'; % In case you need to get rid of the outer box 
@@ -110,7 +104,7 @@ for i = 1 : Number_test_NTC
 
     % Second figure (hysteresis) X axis : Displacement Y axis Force
     figure
-    p2 = plot(Disp,ForceFilt);
+    p2 = plot(Disp,Force);
     hold on;
     grid on;
     
@@ -186,21 +180,60 @@ for i = 1 :  numel(Sorted_Names)
 
     % 3) We put the table of the result under the graph on a new page ? 
 
-    % Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
-    % Table_doc.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+    % % Table_doc = FormalTable(Result_struct.(TestName{i})(1).Results); % The table from the structure "Result_struct.(TestName{i})(1).Results" is a table in the format of matlab and we have to convert it before adding it to the doc
+    % % Table_doc.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+    % % 
+    % % Table_doc.Border = 'single';
+    % % Table_doc.BorderWidth = '1pt';
     % 
-    % Table_doc.Border = 'single';
-    % Table_doc.BorderWidth = '1pt';
-    
-    Result_struct.(TestName{i})(1).Results = Round_Table(Result_struct.(TestName{i})(1).Results);
+    % Result_struct.(TestName{i})(1).Results = Round_Table(Result_struct.(TestName{i})(1).Results);
+    % 
+    % tableStyle ={Width("100%"),Border("solid"),RowSep("solid"),ColSep("solid")};
+    % tableEntriesStyle = {HAlign("center"),VAlign("middle"),FontSize("8.5pt")};
+    % headerRowStyle ={InnerMargin("2pt","2pt","2pt","2pt"),Bold(true)};
+    % 
+    % % headerContent =Result_struct.(TestName{i})(1).Results(1, :);
+    % % bodyContent =Result_struct.(TestName{i})(1).Results(2:end, :);
+    % 
+    % specs(1) = TableColSpec;
+    % specs(1).Span = 1;
+    % specs(1).Style = {Width("12%")};
+    % 
+    % specs(2) = TableColSpec;
+    % specs(2).Span = 10;
+    % specs(2).Style = {Width("8.8%")};
+    % 
+    % grps(1).ColSpecs = specs;
+    % 
+    % Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
+    % Name_table.HAlign = 'center';
+    % append(doc,Name_table);
+    % 
+    % formalTable = FormalTable(Result_struct.(TestName{i})(1).Results);
+    % % grps = TableColSpecGroup;
+    % % grps.ColSpecs = specs;
+    % 
+    % % formalTable.ColSpecGroups = grps;
+    % 
+    % formalTable.Style = tableStyle;
+    % formalTable.TableEntriesStyle = tableEntriesStyle;
+    % 
+    % headerRow = formalTable.Header.Children;
+    % headerRow.Style = headerRowStyle; 
+    % 
+    % append(doc,formalTable);
+    % 3) Tableau de résultats
 
-    tableStyle ={Width("100%"),Border("solid"),RowSep("solid"),ColSep("solid")};
-    tableEntriesStyle = {HAlign("center"),VAlign("middle"),FontSize("8.5pt")};
-    headerRowStyle ={InnerMargin("2pt","2pt","2pt","2pt"),Bold(true)};
-    
-    % headerContent =Result_struct.(TestName{i})(1).Results(1, :);
-    % bodyContent =Result_struct.(TestName{i})(1).Results(2:end, :);
+    % A. Formater le tableau avec Round_Table
+    rawTable = Result_struct.(TestName{i})(1).Results;
+    cleanTable = Round_Table(rawTable);
 
+    % B. Titre
+    Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
+    Name_table.HAlign = 'center';
+    append(doc, Name_table);
+
+    % C. Configuration des largeurs de colonnes (ColSpecGroup)
     specs(1) = TableColSpec;
     specs(1).Span = 1;
     specs(1).Style = {Width("12%")};
@@ -209,14 +242,17 @@ for i = 1 :  numel(Sorted_Names)
     specs(2).Span = 10;
     specs(2).Style = {Width("8.8%")};
 
-    grps(1).ColSpecs = specs;
+    grps = TableColSpecGroup;
+    grps.ColSpecs = specs;
 
-    Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
-    Name_table.HAlign = 'center';
-    append(doc,Name_table);
-
-    formalTable = FormalTable(Result_struct.(TestName{i})(1).Results);
+    % D. Instanciation de la FormalTable avec le tableau nettoyé
+    formalTable = FormalTable(cleanTable);
     formalTable.ColSpecGroups = grps;
+
+    % E. Application des styles
+    tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
+    tableEntriesStyle = {HAlign("center"), VAlign("middle"), FontSize("8.5pt")};
+    headerRowStyle = {InnerMargin("2pt","2pt","2pt","2pt"), Bold(true)};
 
     formalTable.Style = tableStyle;
     formalTable.TableEntriesStyle = tableEntriesStyle;
@@ -224,7 +260,7 @@ for i = 1 :  numel(Sorted_Names)
     headerRow = formalTable.Header.Children;
     headerRow.Style = headerRowStyle; 
 
-    append(doc,formalTable);
+    append(doc, formalTable);
 
 end
 
