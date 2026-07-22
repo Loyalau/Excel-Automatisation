@@ -65,6 +65,8 @@ clear main_folder new_filename EN_sub_folder Result_table File content_folder S 
 
 %% Plot of the graphs : 
 PlotsFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Plot';
+Title_graph1 = cell(1, Number_test_EN);
+Title_graph2 = cell(1, Number_test_EN);
 
 % Parametri del filtro:
 % N = ordine del polinomio (più è alto, più protegge i picchi)
@@ -88,6 +90,10 @@ for i = 1 : Number_test_EN
     grid on;
     % ax.Box = 'off'; % In case you need to get rid of the outer box 
     
+    % Position the X axis in the grid at the origin
+    ax = gca;
+    ax.XAxisLocation = 'origin';
+
     % Limits of the grid
     xlim([0 round(max(Time))*1.1]);
     ylim([-300 300]);
@@ -95,16 +101,16 @@ for i = 1 : Number_test_EN
     % Label, Legend and title
     xl1 = xlabel('Tempo [s]');
     yl1 = ylabel('Spostamento [mm] Carico [kN]');
-    Title_graph = sprintf('Storia di spostamento e carico applicata prove n°%d', i );
-    title(Title_graph);
+    Title_graph1{i} = sprintf('Storia di spostamento e carico applicata prove n°%d', i );
+    % title(Title_graph1{i});
     legend({'Spostamento','Carico'},'Location','southwest');
     legend('boxoff');
 
     % Positioning of the x label
-    xl1.Position = [475, -25];            
+    xl1.Position = [500, -50];            
     
     hold off
-    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
+    saveas(gcf, [PlotsFolder '\' Title_graph1{i} '.png'])
 
     % Second figure (hysteresis) X axis : Displacement Y axis Force
     figure
@@ -125,16 +131,16 @@ for i = 1 : Number_test_EN
     % Label, and title
     xl2 = xlabel('Spostamento [mm]');
     yl2 = ylabel('Carico [kN]');
-    Title_graph = sprintf('Diagramma isteretico prove n°%d', i);
-    title(Title_graph);
+    Title_graph2{i} = sprintf('Diagramma isteretico prove n°%d', i);
+    % title(Title_graph2{i});
     
     % Positioning of the x and y label + rotation of the y label so that it can be read vertically
     xl2.Position = [65, -50];           
-    yl2.Position = [-15, 250];
+    yl2.Position = [-10, 215];
     yl2.Rotation = 90;
 
     hold off
-    saveas(gcf, [PlotsFolder '\' Title_graph '.png'])
+    saveas(gcf, [PlotsFolder '\' Title_graph2{i} '.png'])
 end
 
 clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
@@ -150,6 +156,7 @@ doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Ce
 open(doc); % "fopen" because fopen and fwrite don't work with Word file only with .txt
 
 for i = 1 :  numel(Sorted_Names)
+    % 1) We write the subtitle of the test
     title = char(Sorted_Names{i, 1});
     title = strrep(title, "'", "");  % sscanf don't work with these caractere
 
@@ -157,11 +164,37 @@ for i = 1 :  numel(Sorted_Names)
     Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
     
     append(doc,Sub_title); % "fwrite"
-    %fwrite(fid, Sub_title{i}); % write the corrected info of the old file into the new one
+    
+    % 2) We put the 2 graph below the subtitle 
+    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']);
+    % img1.Width = '10cm';   
+    % img1.Height = '5cm';  
+    img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+    append(doc, img1);
+
+    legend1 =  Paragraph('Storia di spostamento e carico applicata.');
+    legend1.HAlign = 'center';
+    append(doc,legend1);
+
+    img2 = Image([PlotsFolder '\' Title_graph2{i} '.png']);
+    % img2.Width = '10cm';   
+    % img2.Height = '5cm';
+    img2.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+    append(doc, img2); 
+
+    legend2 = Paragraph('Diagramma isteretico.');
+    legend2.HAlign = 'center';
+    append(doc,legend2);
+
+    % append(doc, PageBreak()); % New page on the doc
+    
+    % 3) We put the table of the result under the graph on a new page ? 
+    Table_doc = Result_struct.(TestName)(1).Results{i};
+    
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title      
+clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2     
 
 
 
