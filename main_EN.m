@@ -61,7 +61,7 @@ for i = 1 : Number_test_EN
     Result_struct.(TestName)(1).Results =  Result_table{i}; % put the table of all result in the "Results" element of the structure
 end
 
-clear main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN
+clear main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN TestName
 
 %% Plot of the graphs : 
 
@@ -135,4 +135,29 @@ end
 clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 
 % saveas(gcf, [PlotsFolder '\' Title '.png'])
+
+%% Writing in the doc 
+import mlreportgen.dom.*
+
+Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
+Sorted_Names = Sort_struct(Result_struct);
+%Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
+
+doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Certificato needed for a Word file
+open(doc); % "fopen" because fopen and fwrite don't work with Word file only with .txt
+
+for i = 1 :  numel(Sorted_Names)
+    title = char(Sorted_Names{i, 1});
+    title = strrep(title, "'", "");  % sscanf don't work with these caractere
+
+    k = sscanf(title, 'EN_%d_22');
+    Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
+    
+    append(doc,Sub_title); % "fwrite"
+    fwrite(fid, Sub_title{i}); % write the corrected info of the old file into the new one
+end
+
+close(doc); % "fclose"
+
+
 
