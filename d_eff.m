@@ -17,5 +17,6 @@ M = ones(Nb_SemiCycle,1); % The goal is to create a matrix/Vector constituted of
             M(k) = -Gi;
             M(k+1) = +Gi;
     end
+
 D{:,7} = D{:,3} + M; 
 end

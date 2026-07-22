@@ -191,20 +191,29 @@ for i = 1 :  numel(Sorted_Names)
     % 
     % Table_doc.Border = 'single';
     % Table_doc.BorderWidth = '1pt';
+    
+    Result_struct.(TestName{i})(1).Results = Round_Table(Result_struct.(TestName{i})(1).Results);
 
     tableStyle ={Width("100%"),Border("solid"),RowSep("solid"),ColSep("solid")};
-    tableEntriesStyle = {HAlign("center"),VAlign("middle")};
+    tableEntriesStyle = {HAlign("center"),VAlign("middle"),FontSize("8.5pt")};
     headerRowStyle ={InnerMargin("2pt","2pt","2pt","2pt"),Bold(true)};
     
     % headerContent =Result_struct.(TestName{i})(1).Results(1, :);
     % bodyContent =Result_struct.(TestName{i})(1).Results(2:end, :);
 
-    grps(1) = TableColSpecGroup;
-    grps(1).Span = 11;
-    grps(1).Style = {Width("9.09%")};
-    % grps(1).ColSpecs = specs;
+    specs(1) = TableColSpec;
+    specs(1).Span = 1;
+    specs(1).Style = {Width("12%")};
 
-    append(doc,Heading1("Tabella riassuntiva dei risultati della prova."));
+    specs(2) = TableColSpec;
+    specs(2).Span = 10;
+    specs(2).Style = {Width("8.8%")};
+
+    grps(1).ColSpecs = specs;
+
+    Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
+    Name_table.HAlign = 'center';
+    append(doc,Name_table);
 
     formalTable = FormalTable(Result_struct.(TestName{i})(1).Results);
     formalTable.ColSpecGroups = grps;
