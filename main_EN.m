@@ -146,7 +146,7 @@ doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Ce
 open(doc); % "fopen" because fopen and fwrite don't work with Word file only with .txt
 
 for i = 1 :  numel(Sorted_Names)
-    % 1) We write the subtitle of the test
+% 1) We write the subtitle of the test
     title = char(Sorted_Names{i, 1});
     title = strrep(title, "'", "");  % sscanf don't work with these caractere
 
@@ -155,7 +155,7 @@ for i = 1 :  numel(Sorted_Names)
 
     append(doc,Sub_title); % "fwrite"
 
-    % 2) We put the 2 graph below the subtitle 
+% 2) We put the 2 graph below the subtitle 
     img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']); 
     img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
     append(doc, img1);
@@ -277,6 +277,7 @@ for i = 1 :  numel(Sorted_Names)
 
     append(doc, formalTable);
     
+% We put the picture of the test after the table
     append(doc, PageBreak()); % New page on the doc
 end
 

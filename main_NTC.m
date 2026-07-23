@@ -138,9 +138,9 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 %% Writing in the doc 
 import mlreportgen.dom.*
 
+FotoFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
 Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
 Sorted_Names = Sort_struct(Result_struct,TestName);
-%Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
 
 doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Certificato needed for a Word file
 open(doc); % "fopen" because fopen and fwrite don't work with Word file only with .txt
@@ -276,6 +276,28 @@ for i = 1 :  numel(Sorted_Names)
     headerRow.Style = headerRowStyle; 
 
     append(doc, formalTable);
+    
+    append(doc, LineBreak()); % We jump one line forward
+
+% We put the picture of the test after the table
+    Name_Picture = sprintf('foto_prove_%d', i);  
+
+    % We need to rotate the picture
+    imgData = imread([FotoFolder '\' Name_Picture '.jpg']);
+    imgRotated = imrotate(imgData, -90);
+
+    % Temporary save of the picture to rewrite it 
+    RotImgPath = [FotoFolder '\' Name_Picture '_rot.jpg'];
+    imwrite(imgRotated, RotImgPath);
+
+    Foto = Image(RotImgPath);
+
+    Foto.Style = {Width('8cm'),Height('13cm'),HAlign('center')};
+    append(doc, Foto);
+
+    legend_foto =  Paragraph('Il campione nel corso della prova.');
+    legend_foto.HAlign = 'center';
+    append(doc,legend_foto);
 
     append(doc, PageBreak()); % New page on the doc
 
