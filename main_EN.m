@@ -138,6 +138,7 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 %% Writing in the doc 
 import mlreportgen.dom.*
 
+FotoFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
 Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
 Sorted_Names = Sort_struct(Result_struct,TestName);
 %Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
@@ -278,8 +279,28 @@ for i = 1 :  numel(Sorted_Names)
     append(doc, formalTable);
     
 % We put the picture of the test after the table
+    Name_Picture = sprintf('foto_prove_%d', i);  
+
+    % We need to rotate the picture
+    imgData = imread([FotoFolder '\' Name_Picture '.jpg']);
+    imgRotated = imrotate(imgData, -90);
+
+    % Temporary save of the picture to rewrite it 
+    RotImgPath = [FotoFolder '\' Name_Picture '_rot.jpg'];
+    imwrite(imgRotated, RotImgPath);
+
+    Foto = Image(RotImgPath);
+
+    Foto.Style = {Width('8cm'),Height('13cm'),HAlign('center')};
+    append(doc, Foto);
+
+    legend_foto =  Paragraph('Il campione nel corso della prova.');
+    legend_foto.HAlign = 'center';
+    append(doc,legend_foto);
+
     append(doc, PageBreak()); % New page on the doc
+
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 headerRowStyle Title_graph2 cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName
+clear c colldx cellCycle cellData colldx cycle_num_m cycle_num_p Foto FotoFolder imgData imgRotated legend_foto Name_Picture numDataRows p1 p2 p_bot p_top r RotImgPath row rowMinus val_m val_p varNames ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName   

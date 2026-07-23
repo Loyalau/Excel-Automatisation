@@ -304,4 +304,4 @@ for i = 1 :  numel(Sorted_Names)
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName    
+clear c colldx cellCycle cellData colldx cycle_num_m cycle_num_p Foto FotoFolder imgData imgRotated legend_foto Name_Picture numDataRows p1 p2 p_bot p_top r RotImgPath row rowMinus val_m val_p varNames ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName   
