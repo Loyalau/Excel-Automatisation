@@ -280,21 +280,32 @@ for i = 1 :  numel(Sorted_Names)
     
 % We put the picture of the test after the table
     Name_Picture = sprintf('foto_prove_%d', i);  
-
+    imgPath = [FotoFolder '\' Name_Picture '.jpg']; 
     % We need to rotate the picture
-    imgData = imread([FotoFolder '\' Name_Picture '.jpg']);
+    clear imgData;
+    imgData = imread(imgPath);
     
     % The problem is we don't know in what direction is the picture (the 2nd one was already in the good direction in my case therefore we have to do this
-    info = imfinfo([FotoFolder '\' Name_Picture '.jpg']);
-    if isfield(info, 'Orientation')
+    info = imfinfo(imgPath);
+    isRotated = false; % This will ensure that we get to one of the case in the following if condition, else it will be manually rotated
+
+    if isfield(info, 'Orientation') && ~isempty(info.Orientation)
         switch info.Orientation
             case 6 % The case in which the picture need to be rotated in 90° clock-wise 
                 imgRotated = imrotate(imgData, -90);
+                isRotated = true;
             case 8 % The case in which the picture need to be rotated in 90° counter-clockwise
                 imgRotated = imrotate(imgData, 90);
+                isRotated = true;
             case 3 % The case in which the picture is upside down
                 imgRotated = imrotate(imgData, 180);
+                isRotated = true;
         end
+    end
+
+    % I need to do this manually just for the picture of the test n°2 that isn't in any of the precedent case
+    if i == 2 && ~isRotated
+        imgRotated = imrotate(imgData, -90); % ou 90 selon le sens voulu
     end
 
     % Temporary save of the picture to rewrite it 
