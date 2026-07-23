@@ -283,7 +283,19 @@ for i = 1 :  numel(Sorted_Names)
 
     % We need to rotate the picture
     imgData = imread([FotoFolder '\' Name_Picture '.jpg']);
-    imgRotated = imrotate(imgData, -90);
+    
+    % The problem is we don't know in what direction is the picture (the 2nd one was already in the good direction in my case therefore we have to do this
+    info = imfinfo([FotoFolder '\' Name_Picture '.jpg']);
+    if isfield(info, 'Orientation')
+        switch info.Orientation
+            case 6 % The case in which the picture need to be rotated in 90° clock-wise 
+                imgRotated = imrotate(imgData, -90);
+            case 8 % The case in which the picture need to be rotated in 90° counter-clockwise
+                imgRotated = imrotate(imgData, 90);
+            case 3 % The case in which the picture is upside down
+                imgRotated = imrotate(imgData, 180);
+        end
+    end
 
     % Temporary save of the picture to rewrite it 
     RotImgPath = [FotoFolder '\' Name_Picture '_rot.jpg'];
