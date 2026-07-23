@@ -172,20 +172,18 @@ for i = 1 :  numel(Sorted_Names)
     legend2.HAlign = 'center';
     append(doc,legend2);
 
-    append(doc, PageBreak()); % New page on the doc
-
-    % 3) We put the table of the result under the graph on a new page ? 
-
-    % The firs problem is that the table from
-    % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table
-    cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
-
+    % 3) We put the table of the result under the graph/ The following code doesn't come from me it seems to work but still 
+    
     % Title of the table in the doc
     Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
     Name_table.HAlign = 'center';
     append(doc, Name_table);
 
-    % width of the column (first one is slightly wider than the other one)
+    % The first problem is that the table from
+    % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table (it transform the double into char to round the number of character directly)
+    cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
+
+    % width of the column (first one is slightly wider than the 10 others one)
     specs(1) = TableColSpec;
     specs(1).Span = 1;
     specs(1).Style = {Width("12%")};
@@ -198,22 +196,74 @@ for i = 1 :  numel(Sorted_Names)
     grps.ColSpecs = specs;
 
     % Writing of the table with the previous dimension
-    formalTable = FormalTable(cleanTable);
+    formalTable = FormalTable();
     formalTable.ColSpecGroups = grps;
 
-    % % Fusion of the cellule/line of the table from + and - cycle
-    % bodyRows = formalTable.Body.Children; % bodyRows has now all the line of the table
-    % numRows = numel(bodyRows);
-    % 
-    % bodyRows = formalTable.Body.Children;
-    % for r = 1:2:numel(bodyRows)
-    %     cellPlus.RowSpan = 2;
-    % 
-    %     nextRow = bodyRows(r+1);
-    %     cellMinus = nextRow.Children(1);
-    %     removeEntry(nextRow, cellMinus); % remove the next cell
-    % end
-    % 
+
+    % The second problem is that all of our value are now char therefore all the typo is like this " 3.99 " 
+    % Here his how to solve this problem : 
+    
+    % Header without ' " " '
+    varNames = cleanTable.Properties.VariableNames;
+    headerRow = TableRow();
+    for colIdx = 1:numel(varNames)
+        append(headerRow, TableEntry(char(varNames{colIdx}))); 
+    end
+    append(formalTable.Header, headerRow);
+
+    % Now for the value in the table, the issue in addition to the quotations mark is that we wants the two line of the cycle (ex : semi cycle 1+ and 1-) to be on the same "row" (without any demarcation between) and
+    % Plus we wants the demarcation to be between two different cycle (ex : 1- and 2+)
+    numDataRows = height(cleanTable);
+
+    for r = 1:2:numDataRows
+        row = TableRow(); % This is the row that will be shared by the two semi cycle
+
+        % For the first column : the name of each semi cycle (ex : 1+ and 1-)
+        cycle_num_p = char(cleanTable{r, 1}); % We use char to delete the quotations mark, row +
+        cycle_num_m = char(cleanTable{r+1, 1}); % row - 
+
+        cellCycle = TableEntry();
+        cellCycle.RowSpan = 2; % This is the 2 row allocated for the 2 line
+
+        p1 = Paragraph(cycle_num_p); % In order to put the data one on top of the other we have to use 2 different paragraph (one for each data)
+        p1.HAlign = 'center';
+        p2 = Paragraph(cycle_num_m);
+        p2.HAlign = 'center';
+
+        append(cellCycle, p1);
+        append(cellCycle, p2);
+        append(row, cellCycle);
+
+        % For the rest of the column (all the data value)
+        for c = 2:width(cleanTable)
+            val_p = char(string(cleanTable{r, c}));   % Value for the cycle +
+            val_m = char(string(cleanTable{r+1, c})); % Value for the cycle -
+
+            cellData = TableEntry();
+            cellData.RowSpan = 2; % Merge the two cells vertically
+
+            p_top = Paragraph(val_p);
+            p_top.HAlign = 'center';
+
+            p_bot = Paragraph(val_m);
+            p_bot.HAlign = 'center';
+
+            append(cellData, p_top);
+            append(cellData, p_bot);
+
+            append(row, cellData);
+        end
+
+        % This is the demarcation line between the two different cycle
+        append(formalTable.Body, row);
+
+        % It is necessary I think to create a false line to validate the line RowSpan = 2 
+        % ( I think what we technically did is that we expanded 1 row and put two line of data inside one on top of the other and the other row that was supposed to receive the data of the cycle - still exist but has nothing in it) 
+        % but I'm not sure
+        rowMinus = TableRow();
+        append(formalTable.Body, rowMinus);
+    end
+
     % Style of the table/headrow...
     tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
     tableEntriesStyle = {HAlign("center"), VAlign("middle"), FontSize("8.5pt")};
@@ -227,7 +277,9 @@ for i = 1 :  numel(Sorted_Names)
 
     append(doc, formalTable);
 
+    append(doc, PageBreak()); % New page on the doc
+
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName    
+clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName    
