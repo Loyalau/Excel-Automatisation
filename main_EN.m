@@ -5,9 +5,9 @@ G_EN = table(Size=[Number_test_EN 1], VariableTypes="double", VariableNames="Pla
 for i = 1 : Number_test_EN
     G_EN{i, 1} = input(sprintf('Enter the measured Play for the test number %d : ', i));
 end 
-Nb_Cycle_EN = [10]; % Here is the number of cycle for the EN 15129 procedure (the first 2 sequences of 5 cycles aren't used for the following calculation
+Nb_Cycle_EN = [10]; % Here is the number of cycle for the EN 15129 procedure
 
-Data_Table = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
+Data_Table = cell(1, Number_test_EN); % Table on which we will place the data from the txt
 Result_struct = struct(); % This is the end goal of this program, a structure with a table for each test with all the result (data and calculation)
 Result_table = cell(1,Number_test_EN); % This is the sub-table corresponding of each test that will be put in the structure at the end
 Nb_SemiCycle = 2* Nb_Cycle_EN;
@@ -15,7 +15,7 @@ Nb_SemiCycle = 2* Nb_Cycle_EN;
 ref_EN = input('Enter the expected absolute value of the pic of the cycle (in mm): '); % Reference absolute value of the max/min that we are searching for
 
 % Main program :
-    %% Lecture of the folders (according to the way it was done on the 2024_Connessione HPC_Hilti Schaan e Giongo // Creation and filling of the final Result_table :
+    %% Lecture of the folders (according to the way it was done on the 2024_Connessione HPC_Hilti Schaan e Giongo /  Creation and filling of the final Result_table :
 
 % lecture of the folders
 main_folder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests'; % Path to the main folder (that contain all the txt of the test, don't forget to double the '\' in the path)
@@ -37,22 +37,21 @@ for i = 1 : Number_test_EN
     fid = fopen(new_filename, 'w'); % open in writing configuration the new file
     fwrite(fid, S); % write the corrected info of the old file into the new one
 
-    Result_struct.(TestName{i})(1).Test=EN_sub_folder(i).name; % put the name of the test in the "test" element of the structure
-    Result_struct.(TestName{i})(1).Data=readmatrix(new_filename, 'Range', '9:1000000000'); % put the data in the "data" element of the structure
+    Result_struct.(TestName{i})(1).Test=EN_sub_folder(i).name; % put the name of the test in the "test" category of the structure
+    Result_struct.(TestName{i})(1).Data=readmatrix(new_filename, 'Range', '9:1000000000'); % put the data in the "data" category of the structure
 
     fclose 'all'; % close all the file
     %save 'G:\Drive condivisi\DICAM - LPMS\Prove\Prove commerciali\2024_Connessione HPC_Hilti Schaan e Giongo\Prove\2026_Test overturning\Analisi dati\DataCyc.mat' Data -mat
-    
-    Result_struct.(TestName{i})(1).Gioco = G_EN{i, 1}; % put the play in the "gioco" element of the structure
+
+    Result_struct.(TestName{i})(1).Gioco = G_EN{i, 1};
 
 
 
 % creation/filling of the result table
-
     Data_Table{i} = array2table(Result_struct.(TestName{i})(1).Data); % Result_struct.(TestName)(1).Data is an array right now so to call the function clean table we need it to be a table
-    
-    Result_struct.(TestName{i})(1).Data = Clean_Table(Data_Table{i}); % Clean the data from the first value 
 
+    Result_struct.(TestName{i})(1).Data = Clean_Table(Data_Table{i}); % Clean the data from the first value 
+    
     Result_table{i} = Cycle_format( Result_struct.(TestName{i})(1).Data,Nb_Cycle_EN,ref_EN); % Filling of the first 6 column (Semi Cycle, Running time, Displacement, Force, Energy of each semi cycle and Energy of a Cycle)
     Result_table{i} = d_eff(Result_table{i},G_EN{i, 1},Nb_SemiCycle); % Calculation of the column d_eff
     Result_table{i} = K_eff(Result_table{i}); % Calculation of K_eff
@@ -60,41 +59,31 @@ for i = 1 : Number_test_EN
     Result_table{i} = DeltaK(Result_table{i},Nb_Cycle_EN); % Calculation of DK_eff and DKsi
 
     Result_struct.(TestName{i})(1).Results =  Result_table{i}; % put the table of all result in the "Results" element of the structure
+     
 end
 
-clear main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN TestName
+clear main_folder new_filename EN_sub_folder Result_table File content_folder S ans fid i ref_EN
 
-%% Plot of the graphs : 
+%% Plot of the graphs :
 PlotsFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Plot';
 Title_graph1 = cell(1, Number_test_EN);
 Title_graph2 = cell(1, Number_test_EN);
-
 % Parametri del filtro:
-% N = ordine del polinomio (più è alto, più protegge i picchi)
-% F = lunghezza della finestra (deve essere un numero DISPARI)
-
-N = 3; 
-F = 5; % Una finestra stretta per non spalmare i picchi di 2-3 campioni
-
 for i = 1 : Number_test_EN
     
     Force = table2array(Data_Table{i}(:,4))*0.001;
     Disp = table2array(Data_Table{i}(:,3));
     Time = table2array(Data_Table{i}(:,2));
     % apply a filter on the Force to get rid of measurement noise
-    ForceFilt = sgolayfilt(Force, N, F);
+    
     
     % First figure X axis : Time Y axis Displacement and Force
     figure
-    p1 = plot(Time,Disp,Time,ForceFilt);
+    p1 = plot(Time,Disp,Time,Force);
     hold on;
     grid on;
     % ax.Box = 'off'; % In case you need to get rid of the outer box 
     
-    % Position the X axis in the grid at the origin
-    ax = gca;
-    ax.XAxisLocation = 'origin';
-
     % Limits of the grid
     xlim([0 round(max(Time))*1.1]);
     ylim([-300 300]);
@@ -108,14 +97,14 @@ for i = 1 : Number_test_EN
     legend('boxoff');
 
     % Positioning of the x label
-    xl1.Position = [500, -50];            
+    xl1.Position = [225, -25];            
     
     hold off
     saveas(gcf, [PlotsFolder '\' Title_graph1{i} '.png'])
 
     % Second figure (hysteresis) X axis : Displacement Y axis Force
     figure
-    p2 = plot(Disp,ForceFilt);
+    p2 = plot(Disp,Force);
     hold on;
     grid on;
     
@@ -136,8 +125,8 @@ for i = 1 : Number_test_EN
     % title(Title_graph2{i});
     
     % Positioning of the x and y label + rotation of the y label so that it can be read vertically
-    xl2.Position = [65, -50];           
-    yl2.Position = [-10, 215];
+    xl2.Position = [50, -50];           
+    yl2.Position = [-15, 215];
     yl2.Rotation = 90;
 
     hold off
@@ -163,13 +152,11 @@ for i = 1 :  numel(Sorted_Names)
 
     k = sscanf(title, 'EN_%d_22');
     Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
-    
+
     append(doc,Sub_title); % "fwrite"
-    
+
     % 2) We put the 2 graph below the subtitle 
-    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']);
-    % img1.Width = '10cm';   
-    % img1.Height = '5cm';  
+    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']); 
     img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
     append(doc, img1);
 
@@ -178,8 +165,6 @@ for i = 1 :  numel(Sorted_Names)
     append(doc,legend1);
 
     img2 = Image([PlotsFolder '\' Title_graph2{i} '.png']);
-    % img2.Width = '10cm';   
-    % img2.Height = '5cm';
     img2.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
     append(doc, img2); 
 
@@ -187,19 +172,61 @@ for i = 1 :  numel(Sorted_Names)
     legend2.HAlign = 'center';
     append(doc,legend2);
 
-    % append(doc, PageBreak()); % New page on the doc
-    
     % 3) We put the table of the result under the graph on a new page ? 
-    Table_doc = Result_struct.(TestName)(1).Results{i};
-    Table_doc.Style = {Width('15cm'),Height('10cm'),HAlign('center')};
-    Table_doc.Border = 'single';
-    Table_doc.BorderWidth = '1pt';
-    append(doc, Table_doc);
 
+    % The firs problem is that the table from
+    % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table
+    cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
+
+    % Title of the table in the doc
+    Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
+    Name_table.HAlign = 'center';
+    append(doc, Name_table);
+
+    % width of the column (first one is slightly wider than the other one)
+    specs(1) = TableColSpec;
+    specs(1).Span = 1;
+    specs(1).Style = {Width("12%")};
+
+    specs(2) = TableColSpec;
+    specs(2).Span = 10;
+    specs(2).Style = {Width("8.8%")};
+
+    grps = TableColSpecGroup;
+    grps.ColSpecs = specs;
+
+    % Writing of the table with the previous dimension
+    formalTable = FormalTable(cleanTable);
+    formalTable.ColSpecGroups = grps;
+
+    % % Fusion of the cellule/line of the table from + and - cycle
+    % bodyRows = formalTable.Body.Children; % bodyRows has now all the line of the table
+    % numRows = numel(bodyRows);
+    % 
+    % bodyRows = formalTable.Body.Children;
+    % for r = 1:2:numel(bodyRows)
+    %     cellPlus.RowSpan = 2;
+    % 
+    %     nextRow = bodyRows(r+1);
+    %     cellMinus = nextRow.Children(1);
+    %     removeEntry(nextRow, cellMinus); % remove the next cell
+    % end
+    % 
+    % Style of the table/headrow...
+    tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
+    tableEntriesStyle = {HAlign("center"), VAlign("middle"), FontSize("8.5pt")};
+    headerRowStyle = {InnerMargin("2pt","2pt","2pt","2pt"), Bold(true)};
+
+    formalTable.Style = tableStyle;
+    formalTable.TableEntriesStyle = tableEntriesStyle;
+
+    headerRow = formalTable.Header.Children;
+    headerRow.Style = headerRowStyle; 
+
+    append(doc, formalTable);
+    
+    append(doc, PageBreak()); % New page on the doc
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2     
-
-
-
+clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName

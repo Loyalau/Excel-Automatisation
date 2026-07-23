@@ -151,7 +151,7 @@ for i = 1 :  numel(Sorted_Names)
     title = strrep(title, "'", "");  % sscanf don't work with these caractere
 
     k = sscanf(title, 'NTC_%d_22');
-    Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
+    Sub_title = sprintf('4.%d.	Risultati prova KDEP-NTC18-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
 
     append(doc,Sub_title); % "fwrite"
 
@@ -230,4 +230,4 @@ for i = 1 :  numel(Sorted_Names)
 end
 
 close(doc); % "fclose"
-clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2     
+clear ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName    
