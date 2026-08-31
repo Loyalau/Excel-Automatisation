@@ -38,7 +38,7 @@ for i = 1 : Number_test_EN
     fwrite(fid, S); % write the corrected info of the old file into the new one
 
     Result_struct.(TestName{i})(1).Test=EN_sub_folder(i).name; % put the name of the test in the "test" category of the structure
-    Result_struct.(TestName{i})(1).Data=readmatrix(new_filename, 'Range', '9:1000000000'); % put the data in the "data" category of the structure
+    Result_struct.(TestName{i})(1).Data=readmatrix(new_filename, 'Range', '9:1000000000'); % put the data in the "data" category of the structure the data begin in line '9' and we will say will be ended before line '1000000000'
 
     fclose 'all'; % close all the file
     %save 'G:\Drive condivisi\DICAM - LPMS\Prove\Prove commerciali\2024_Connessione HPC_Hilti Schaan e Giongo\Prove\2026_Test overturning\Analisi dati\DataCyc.mat' Data -mat
@@ -71,9 +71,10 @@ Title_graph2 = cell(1, Number_test_EN);
 % Parametri del filtro:
 for i = 1 : Number_test_EN
     
-    Force = table2array(Data_Table{i}(:,4))*0.001;
+    Force = table2array(Data_Table{i}(:,4))*0.001; % extraction of the data
     Disp = table2array(Data_Table{i}(:,3));
     Time = table2array(Data_Table{i}(:,2));
+
     % apply a filter on the Force to get rid of measurement noise
     
     
@@ -139,7 +140,7 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 import mlreportgen.dom.*
 
 FotoFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
-Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
+Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_template.docx' ; % Need to be changed with the actual folder where it will be stored but for now
 Sorted_Names = Sort_struct(Result_struct,TestName);
 %Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
 
@@ -201,7 +202,7 @@ for i = 1 :  numel(Sorted_Names)
     formalTable.ColSpecGroups = grps;
 
 
-    % The second problem is that all of our value are now char therefore all the typo is like this " 3.99 " 
+    % The second problem is that all of our value are now char therefore all the typo is like this ' " 3.99 " '
     % Here his how to solve this problem : 
     
     % Header without ' " " '
@@ -305,7 +306,7 @@ for i = 1 :  numel(Sorted_Names)
 
     % I need to do this manually just for the picture of the test n°2 that isn't in any of the precedent case
     if i == 2 && ~isRotated
-        imgRotated = imrotate(imgData, -90); % ou 90 selon le sens voulu
+        imgRotated = imrotate(imgData, -90); % or 90 depending on the rotation you want 
     end
 
     % Temporary save of the picture to rewrite it 
