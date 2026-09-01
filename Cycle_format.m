@@ -101,5 +101,5 @@ Force_col = round(Force_col, 1);
 % Creation and filling of the Table that this function will have to output 
 % (remark : VariableNames could have been declared on the Main and put as input for this function)
 
-D = table(Cycle_col, Time_col, Disp_col, Force_col, NRJ_Semi_col, NRJ_col, zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), VariableNames=["Cycle","Time [s]","Displacement [mm]","Force [kN]","NRJ [J]","NRJ_Cycle [J]","d_eff [mm]","K_eff [kN/mm]","DK_eff [%]","Ksi_eff [%]","DKsi_eff [%]"]);
+D = table(Cycle_col, Time_col, Disp_col, Force_col, NRJ_Semi_col, NRJ_col, zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), zeros(Nb_SemiCycle,1), VariableNames=["Ciclo","T [s]","d [mm]","F [kN]","E [J]","E_Cycle [J]","d_eff [mm]","K_eff [kN/mm]","ΔK_eff [%]","Ⲝ_eff [%]","ΔⲜ_eff [%]"]);
 end

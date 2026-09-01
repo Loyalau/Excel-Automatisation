@@ -33,14 +33,14 @@ end
 % et on re-stocke le résultat sous forme de string dans la table.
 
 % Convertit les colonnes numériques pures en vecteurs STRING
-    Di.("Time [s]")          = compose("%.1f", Di.("Time [s]"));
-    Di.("Displacement [mm]") = compose("%.2f", Di.("Displacement [mm]"));
-    Di.("Force [kN]")        = compose("%.1f", Di.("Force [kN]"));
-    Di.("NRJ [J]")           = compose("%.0f", Di.("NRJ [J]"));
-    Di.("NRJ_Cycle [J]")     = compose("%.0f", Di.("NRJ_Cycle [J]"));
+    Di.("T [s]")          = compose("%.1f", Di.("T [s]"));
+    Di.("d [mm]") = compose("%.2f", Di.("d [mm]"));
+    Di.("F [kN]")        = compose("%.1f", Di.("F [kN]"));
+    Di.("E [J]")           = compose("%.0f", Di.("E [J]"));
+    Di.("E_Cycle [J]")     = compose("%.0f", Di.("E_Cycle [J]"));
     Di.("d_eff [mm]")        = compose("%.1f", Di.("d_eff [mm]"));
     Di.("K_eff [kN/mm]")     = compose("%.2f", Di.("K_eff [kN/mm]"));
-    Di.("DK_eff [%]")        = compose("%.2f", Di.("DK_eff [%]"));
-    Di.("Ksi_eff [%]")       = compose("%.2f", Di.("Ksi_eff [%]"));
-    Di.("DKsi_eff [%]")      = compose("%.2f", Di.("DKsi_eff [%]"));
+    Di.("ΔK_eff [%]")        = compose("%.2f", Di.("ΔK_eff [%]"));
+    Di.("Ⲝ_eff [%]")       = compose("%.2f", Di.("Ⲝ_eff [%]"));
+    Di.("ΔⲜ_eff [%]")      = compose("%.2f", Di.("ΔⲜ_eff [%]"));
 end
