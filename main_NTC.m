@@ -18,7 +18,7 @@ ref_NTC = input('Enter the expected absolute value of the pic of the cycle (in m
     %% Lecture of the folders (according to the way it was done on the 2024_Connessione HPC_Hilti Schaan e Giongo /  Creation and filling of the final Result_table :
 
 % lecture of the folders
-main_folder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests'; % Path to the main folder (that contain all the txt of the test, don't forget to double the '\' in the path)
+main_folder = 'C:\\Users\\sonia\\Desktop\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests'; % Path to the main folder (that contain all the txt of the test, don't forget to double the '\' in the path)
 content_folder = dir(main_folder); % Correspond to the action of opening the folder and to take everything from it
 NTC_sub_folder = content_folder([content_folder.isdir] & contains({content_folder.name}, 'NTC')); % We only keep the sub_folder related to the NTC18 procedure, this line remove non-directories and files (that don't contain 'EN' in the name)
 
@@ -65,7 +65,7 @@ end
 clear main_folder new_filename NTC_sub_folder Result_table File content_folder S ans fid i ref_NTC
 
 %% Plot of the graphs :
-PlotsFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Plot';
+PlotsFolder = 'C:\\Users\\sonia\\Desktop\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Plot';
 Title_graph1 = cell(1, Number_test_NTC);
 Title_graph2 = cell(1, Number_test_NTC);
 % Parametri del filtro:
@@ -138,10 +138,10 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 %% Writing in the doc 
 import mlreportgen.dom.*
 
-FotoFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
-Template = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.dotx' ; % Need to be changed with the actual folder where it will be stored but for now
+FotoFolder = 'C:\\Users\\sonia\\Desktop\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
+Template = 'C:\\Users\\sonia\\Desktop\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.dotx' ; % Need to be changed with the actual folder where it will be stored but for now
 
-Output = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test_NTC.docx' ; 
+Output = 'C:\\Users\\sonia\\Desktop\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test_NTC.docx' ; 
 Sorted_Names = Sort_struct(Result_struct,TestName);
 %Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
 sprintf("a");
