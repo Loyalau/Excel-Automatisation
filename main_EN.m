@@ -163,7 +163,7 @@ while ~strcmp(holeId, '#end#')
                 title = strrep(title, "'", "");  % sscanf don't work with these caractere
 
                 k = sscanf(title, 'EN_%d_22');
-                Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
+                Sub_title = sprintf('4.%d.	Risultati prova KDEP-EN15129-T%d', i,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
 
                 append(doc,Sub_title); % "fwrite"
 
@@ -221,7 +221,10 @@ while ~strcmp(holeId, '#end#')
                 varNames = cleanTable.Properties.VariableNames;
                 headerRow = TableRow();
                 for colIdx = 1:numel(varNames)
-                    append(headerRow, TableEntry(char(varNames{colIdx}))); 
+                    pHeader = Paragraph(char(varNames{colIdx}));
+                    pHeader.HAlign = 'center';
+                    pHeader.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+                    append(headerRow, TableEntry(pHeader)); 
                 end
                 append(formalTable.Header, headerRow);
 
@@ -335,7 +338,7 @@ while ~strcmp(holeId, '#end#')
 
                 Foto = Image(RotImgPath);
 
-                Foto.Style = {Width('6cm'),Height('10cm'),HAlign('center')};
+                Foto.Style = {Width('5cm'),Height('8cm'),HAlign('center')};
                 append(doc, Foto);
 
                 legend_foto =  Paragraph('Il campione nel corso della prova.');

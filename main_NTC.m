@@ -139,169 +139,224 @@ clear Disp Force Time Data_Table F N ForceFilt i p1 p2 xl1 xl2 yl1 yl2 ax
 import mlreportgen.dom.*
 
 FotoFolder = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\Foto';
-Certificato_Name = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.docx' ; % Need to be changed with the actual folder where it will be stored but for now
-Sorted_Names = Sort_struct(Result_struct,TestName);
+Template = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test.dotx' ; % Need to be changed with the actual folder where it will be stored but for now
 
-doc = Document(Certificato_Name, 'docx'); % open in writing configuration the Certificato needed for a Word file
+Output = 'C:\\Users\\sonia\\OneDrive\\Bureau\\Aurélien\\Stage\\Stage 2A Trento LPMS\\Tests\\LPMS 288-2026_test_NTC.docx' ; 
+Sorted_Names = Sort_struct(Result_struct,TestName);
+%Sub_title = cell(1, Number_test_EN);  % Table on which we will place the data from the txt
+sprintf("a");
+% To fill in a doc file without erasing the file we take as reference we need to use one file for the output and another one for the template, The 1st argument of the function is the output, the second one is the type of file that we want to write (docx) the third one is the file with the template
+import mlreportgen.dom.*
+doc = Document(Output, 'docx', Template);
+
+% doc = Document(Template, 'docx'); % open in writing configuration the Certificato needed for a Word file
 open(doc); % "fopen" because fopen and fwrite don't work with Word file only with .txt
 
-for i = 1 :  numel(Sorted_Names)
-    % 1) We write the subtitle of the test
-    title = char(Sorted_Names{i, 1});
-    title = strrep(title, "'", "");  % sscanf don't work with these caractere
+sprintf("b");
+holeId = moveToNextHole(doc);
+while ~strcmp(holeId, '#end#')
+    switch holeId
+        case 'Risultati_NTC'
+            sprintf("c");
+            for i = 1 :  numel(Sorted_Names)
+                % 1) We write the subtitle of the test
+                title = char(Sorted_Names{i, 1});
+                title = strrep(title, "'", "");  % sscanf don't work with these caractere
 
-    k = sscanf(title, 'NTC_%d_22');
-    Sub_title = sprintf('4.%d.	Risultati prova KDEP-NTC18-T%d', k,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
+                k = sscanf(title, 'NTC_%d_22');
+                Sub_title = sprintf('5.%d.	Risultati prova KDEP-NTC18-T%d', i,k); % We could just use 'i' but this is a precaution in the case there is a missing number in the tests names
 
-    append(doc,Sub_title); % "fwrite"
+                append(doc,Sub_title); % "fwrite"
 
-    % 2) We put the 2 graph below the subtitle 
-    img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']); 
-    img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
-    append(doc, img1);
+                % 2) We put the 2 graph below the subtitle 
+                img1 = Image([PlotsFolder '\' Title_graph1{i} '.png']); 
+                img1.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+                append(doc, img1);
 
-    legend1 =  Paragraph('Storia di spostamento e carico applicata.');
-    legend1.HAlign = 'center';
-    append(doc,legend1);
+                legend1 =  Paragraph('Storia di spostamento e carico applicata.');
+                legend1.HAlign = 'center';
+                append(doc,legend1);
 
-    img2 = Image([PlotsFolder '\' Title_graph2{i} '.png']);
-    img2.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
-    append(doc, img2); 
+                img2 = Image([PlotsFolder '\' Title_graph2{i} '.png']);
+                img2.Style = {Width('13cm'),Height('8cm'),HAlign('center')};
+                append(doc, img2); 
 
-    legend2 = Paragraph('Diagramma isteretico.');
-    legend2.HAlign = 'center';
-    append(doc,legend2);
-
-    % 3) We put the table of the result under the graph/ The following code doesn't come from me it seems to work but still 
+                legend2 = Paragraph('Diagramma isteretico.');
+                legend2.HAlign = 'center';
+                append(doc,legend2);
+                
+                
+                append(doc, PageBreak());
+                % 3) We put the table of the result under the graph on a new page / The following code doesn't come from me it seems to work but still 
     
-    % Title of the table in the doc
-    Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
-    Name_table.HAlign = 'center';
-    append(doc, Name_table);
+                % Title of the table in the doc
+                Name_table = Paragraph('Tabella riassuntiva dei risultati della prova.');
+                Name_table.HAlign = 'center';
+                append(doc, Name_table);
 
-    % The first problem is that the table from
-    % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table (it transform the double into char to round the number of character directly)
-    cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
+                % The first problem is that the table from
+                % Result_struct.(TestName{i})(1).Results has too much number after the ',' to change this we will use the function Round_Table (it transform the double into char to round the number of character directly)
+                cleanTable = Round_Table(Result_struct.(TestName{i})(1).Results);
 
-    % width of the column (first one is slightly wider than the 10 others one)
-    specs(1) = TableColSpec;
-    specs(1).Span = 1;
-    specs(1).Style = {Width("12%")};
+                % width of the column (first one is slightly wider than the 10 others one)
+                specs(1) = TableColSpec;
+                specs(1).Span = 1;
+                specs(1).Style = {Width("9%")};
 
-    specs(2) = TableColSpec;
-    specs(2).Span = 10;
-    specs(2).Style = {Width("8.8%")};
+                specs(2) = TableColSpec;
+                specs(2).Span = 10;
+                specs(2).Style = {Width("9%")};
 
-    grps = TableColSpecGroup;
-    grps.ColSpecs = specs;
+                grps = TableColSpecGroup;
+                grps.ColSpecs = specs;
 
-    % Writing of the table with the previous dimension
-    formalTable = FormalTable();
-    formalTable.ColSpecGroups = grps;
+                % Writing of the table with the previous dimension
+                formalTable = FormalTable();
+                formalTable.ColSpecGroups = grps;
 
 
-    % The second problem is that all of our value are now char therefore all the typo is like this " 3.99 " 
-    % Here his how to solve this problem : 
+                % The second problem is that all of our value are now char therefore all the typo is like this ' " 3.99 " '
+                % Here his how to solve this problem : 
     
-    % Header without ' " " '
-    varNames = cleanTable.Properties.VariableNames;
-    headerRow = TableRow();
-    for colIdx = 1:numel(varNames)
-        append(headerRow, TableEntry(char(varNames{colIdx}))); 
+                % Header without ' " " '
+                varNames = cleanTable.Properties.VariableNames;
+                headerRow = TableRow();
+                for colIdx = 1:numel(varNames)
+                    pHeader = Paragraph(char(varNames{colIdx}));
+                    pHeader.HAlign = 'center';
+                    pHeader.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+                    append(headerRow, TableEntry(pHeader)); 
+                end
+                append(formalTable.Header, headerRow);
+
+                % Now for the value in the table, the issue in addition to the quotations mark is that we wants the two line of the cycle (ex : semi cycle 1+ and 1-) to be on the same "row" (without any demarcation between) and
+                % Plus we wants the demarcation to be between two different cycle (ex : 1- and 2+)
+                numDataRows = height(cleanTable);
+
+                for r = 1:2:numDataRows
+                    row = TableRow(); % This is the row that will be shared by the two semi cycle
+
+                    % For the first column : the name of each semi cycle (ex : 1+ and 1-)
+                    cycle_num_p = char(cleanTable{r, 1}); % We use char to delete the quotations mark, row +
+                    cycle_num_m = char(cleanTable{r+1, 1}); % row - 
+
+                    cellCycle = TableEntry();
+                    cellCycle.RowSpan = 2; % This is the 2 row allocated for the 2 line
+                    
+                    
+                    p1 = Paragraph(cycle_num_p); % In order to put the data one on top of the other we have to use 2 different paragraph (one for each data)
+                    p1.HAlign = 'center';
+                    p1.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+
+                    p2 = Paragraph(cycle_num_m);
+                    p2.HAlign = 'center';
+                    p2.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+
+                    append(cellCycle, p1);
+                    append(cellCycle, p2);
+                    append(row, cellCycle);
+                 
+                    % For the rest of the column (all the data value)
+                    for c = 2:width(cleanTable)
+                        val_p = char(string(cleanTable{r, c}));   % Value for the cycle +
+                        val_m = char(string(cleanTable{r+1, c})); % Value for the cycle -
+
+                        cellData = TableEntry();
+                        cellData.RowSpan = 2; % Merge the two cells vertically
+
+                        p_top = Paragraph(val_p);
+                        p_top.HAlign = 'center';
+                        p_top.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+
+                        p_bot = Paragraph(val_m);
+                        p_bot.HAlign = 'center';
+                        p_bot.Style = {OuterMargin("0pt", "0pt", "0pt", "0pt")};
+
+                        append(cellData, p_top);
+                        append(cellData, p_bot);
+
+                        append(row, cellData);
+                    end
+
+                    % This is the demarcation line between the two different cycle
+                    append(formalTable.Body, row);
+
+                    % It is necessary I think to create a false line to validate the line RowSpan = 2 
+                    % ( I think what we technically did is that we expanded 1 row and put two line of data inside one on top of the other and the other row that was supposed to receive the data of the cycle - still exist but has nothing in it) 
+                    % but I'm not sure
+                    rowMinus = TableRow();
+                    append(formalTable.Body, rowMinus);
+                end
+
+                % Style of the table/headrow...
+                tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
+                tableEntriesStyle = {HAlign("center"),VAlign("middle"),FontSize("9pt"),InnerMargin("2pt","2pt","1pt","1pt")}; 
+                headerRowStyle = {HAlign("center"),InnerMargin("2pt","2pt","1pt","1pt"), Bold(true), FontSize("7.5pt")};%
+
+                formalTable.Style = tableStyle;
+                formalTable.TableEntriesStyle = tableEntriesStyle;
+                formalTable.HAlign = 'left';
+                
+                headerRow = formalTable.Header.Children;
+                headerRow.Style = headerRowStyle; 
+
+                append(doc, formalTable);
+                append(doc, LineBreak()); % We jump one line forward
+    
+            % We put the picture of the test after the table
+                Name_Picture = sprintf('foto_prove_%d', i);  
+                imgPath = [FotoFolder '\' Name_Picture '.jpg']; 
+                % We need to rotate the picture
+                clear imgData;
+                imgData = imread(imgPath);
+    
+                % The problem is we don't know in what direction is the picture (the 2nd one was already in the good direction in my case therefore we have to do this
+                info = imfinfo(imgPath);
+                isRotated = false; % This will ensure that we get to one of the case in the following if condition, else it will be manually rotated
+    
+                if isfield(info, 'Orientation') && ~isempty(info.Orientation)
+                    switch info.Orientation
+                        case 6 % The case in which the picture need to be rotated in 90° clock-wise 
+                            imgRotated = imrotate(imgData, -90);
+                            isRotated = true;
+                        case 8 % The case in which the picture need to be rotated in 90° counter-clockwise
+                            imgRotated = imrotate(imgData, 90);
+                            isRotated = true;
+                        case 3 % The case in which the picture is upside down
+                            imgRotated = imrotate(imgData, 180);
+                            isRotated = true;
+                    end
+                end
+
+                % I need to do this manually just for the picture of the test n°2 that isn't in any of the precedent case
+                if i == 2 && ~isRotated
+                    imgRotated = imrotate(imgData, -90); % or 90 depending on the rotation you want 
+                end
+
+                % Temporary save of the picture to rewrite it 
+                RotImgPath = [FotoFolder '\' Name_Picture '_rot.jpg'];
+                imwrite(imgRotated, RotImgPath);
+
+                Foto = Image(RotImgPath);
+
+                Foto.Style = {Width('5cm'),Height('8cm'),HAlign('center')};
+                append(doc, Foto);
+
+                legend_foto =  Paragraph('Il campione nel corso della prova.');
+                legend_foto.HAlign = 'center';
+                append(doc,legend_foto);
+
+                append(doc, PageBreak()); % New page on the doc
+                
     end
-    append(formalTable.Header, headerRow);
-
-    % Now for the value in the table, the issue in addition to the quotations mark is that we wants the two line of the cycle (ex : semi cycle 1+ and 1-) to be on the same "row" (without any demarcation between) and
-    % Plus we wants the demarcation to be between two different cycle (ex : 1- and 2+)
-    numDataRows = height(cleanTable);
-
-    for r = 1:2:numDataRows
-        row = TableRow(); % This is the row that will be shared by the two semi cycle
-
-        % For the first column : the name of each semi cycle (ex : 1+ and 1-)
-        cycle_num_p = char(cleanTable{r, 1}); % We use char to delete the quotations mark, row +
-        cycle_num_m = char(cleanTable{r+1, 1}); % row - 
-
-        cellCycle = TableEntry();
-        cellCycle.RowSpan = 2; % This is the 2 row allocated for the 2 line
-
-        p1 = Paragraph(cycle_num_p); % In order to put the data one on top of the other we have to use 2 different paragraph (one for each data)
-        p1.HAlign = 'center';
-        p2 = Paragraph(cycle_num_m);
-        p2.HAlign = 'center';
-
-        append(cellCycle, p1);
-        append(cellCycle, p2);
-        append(row, cellCycle);
-
-        % For the rest of the column (all the data value)
-        for c = 2:width(cleanTable)
-            val_p = char(string(cleanTable{r, c}));   % Value for the cycle +
-            val_m = char(string(cleanTable{r+1, c})); % Value for the cycle -
-
-            cellData = TableEntry();
-            cellData.RowSpan = 2; % Merge the two cells vertically
-
-            p_top = Paragraph(val_p);
-            p_top.HAlign = 'center';
-
-            p_bot = Paragraph(val_m);
-            p_bot.HAlign = 'center';
-
-            append(cellData, p_top);
-            append(cellData, p_bot);
-
-            append(row, cellData);
-        end
-
-        % This is the demarcation line between the two different cycle
-        append(formalTable.Body, row);
-
-        % It is necessary I think to create a false line to validate the line RowSpan = 2 
-        % ( I think what we technically did is that we expanded 1 row and put two line of data inside one on top of the other and the other row that was supposed to receive the data of the cycle - still exist but has nothing in it) 
-        % but I'm not sure
-        rowMinus = TableRow();
-        append(formalTable.Body, rowMinus);
+        case 'Risultati_EN'
+                sprintf('Please use the main_EN program to write this paragraph');
+            
+        
     end
-
-    % Style of the table/headrow...
-    tableStyle = {Width("100%"), Border("solid"), RowSep("solid"), ColSep("solid")};
-    tableEntriesStyle = {HAlign("center"), VAlign("middle"), FontSize("8.5pt")};
-    headerRowStyle = {InnerMargin("2pt","2pt","2pt","2pt"), Bold(true)};
-
-    formalTable.Style = tableStyle;
-    formalTable.TableEntriesStyle = tableEntriesStyle;
-
-    headerRow = formalTable.Header.Children;
-    headerRow.Style = headerRowStyle; 
-
-    append(doc, formalTable);
-    
-    append(doc, LineBreak()); % We jump one line forward
-
-% We put the picture of the test after the table
-    Name_Picture = sprintf('foto_prove_%d', i);  
-
-    % We need to rotate the picture
-    imgData = imread([FotoFolder '\' Name_Picture '.jpg']);
-    imgRotated = imrotate(imgData, -90);
-
-    % Temporary save of the picture to rewrite it 
-    RotImgPath = [FotoFolder '\' Name_Picture '_rot.jpg'];
-    imwrite(imgRotated, RotImgPath);
-
-    Foto = Image(RotImgPath);
-
-    Foto.Style = {Width('8cm'),Height('13cm'),HAlign('center')};
-    append(doc, Foto);
-
-    legend_foto =  Paragraph('Il campione nel corso della prova.');
-    legend_foto.HAlign = 'center';
-    append(doc,legend_foto);
-
-    append(doc, PageBreak()); % New page on the doc
-
+    holeId = moveToNextHole(doc);
 end
 
 close(doc); % "fclose"
-clear c colldx cellCycle cellData colldx cycle_num_m cycle_num_p Foto FotoFolder imgData imgRotated legend_foto Name_Picture numDataRows p1 p2 p_bot p_top r RotImgPath row rowMinus val_m val_p varNames ans Certificato_Name i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName   
+rptview(Output, 'docx'); % open the Word file we just created
+%clear c colldx cellCycle cellData colldx cycle_num_m cycle_num_p Foto FotoFolder imgData imgRotated legend_foto Name_Picture numDataRows p1 p2 p_bot p_top r RotImgPath row rowMinus val_m val_p varNames ans Template i k Sorted_Name Sub_title title img1 img2 Title_graph1 Title_graph2 headerRowStyle cleanTable formalTable grps headerRow legend1 legend2 Name_table PlotsFolder Sorted_Names specs tableEntriesStyle tableStyle TestName   
